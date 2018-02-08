@@ -14,11 +14,12 @@ import java.util.Collection;
 
 public class SnapshotLoader {
     private final WiktionarySnapshot snapshot;
+    private final WiktionarySnapshotManager snapshotManager;
 
     SnapshotLoader(String PATH_TO_SNAP) {
         EngineContext ruWikiEngineContext = new RuEngineContext();
         WikiEngine ruWikiEngine = new WikiEngineImpl(ruWikiEngineContext);
-        WiktionarySnapshotManager snapshotManager = new WiktionarySnapshotManager(ruWikiEngine);
+        snapshotManager = new WiktionarySnapshotManager(ruWikiEngine);
         System.out.println("Opening snapshot");
         StopWatch watch = StopWatch.createStarted();
         this.snapshot = snapshotManager.openSnapshot(PATH_TO_SNAP);
@@ -28,6 +29,10 @@ public class SnapshotLoader {
 
     public WiktionarySnapshot getSnapshot() {
         return snapshot;
+    }
+
+    public WiktionarySnapshotManager getSnapshotManager() {
+        return snapshotManager;
     }
 
     public static void main(String[] args) {
