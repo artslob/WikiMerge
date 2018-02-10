@@ -11,6 +11,7 @@ import org.apache.commons.lang3.time.StopWatch;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 public class SnapshotLoader {
     private final WiktionarySnapshot snapshot;
@@ -56,5 +57,9 @@ public class SnapshotLoader {
 
     Collection<WikiSense> get_senses() {
         return this.snapshot.getSenses().values();
+    }
+
+    Map<String, WikiSense> get_map_senses() {
+        return this.snapshot.getSenses();
     }
 }

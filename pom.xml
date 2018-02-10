@@ -87,5 +87,11 @@
             <artifactId>dict-it-wiki</artifactId>
             <version>RELEASE-1.6</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.mpkorstanje</groupId>
+            <artifactId>simmetrics-core</artifactId>
+            <version>3.2.3</version>
+        </dependency>
     </dependencies>
 </project>
