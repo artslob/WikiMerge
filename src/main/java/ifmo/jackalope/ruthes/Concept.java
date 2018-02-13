@@ -62,4 +62,8 @@ public class Concept {
     public void setSynonyms(List<String> synonyms) {
         this.synonyms = synonyms;
     }
+
+    public String toString() {
+        return String.format("%s %s", this.id, this.name);
+    }
 }

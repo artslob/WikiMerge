@@ -58,4 +58,9 @@ public enum RelationType {
         }
         throw new IllegalArgumentException("No constant with text " + name + " found");
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s", this.name(), this.name);
+    }
 }
