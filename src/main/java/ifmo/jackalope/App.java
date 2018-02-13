@@ -3,6 +3,7 @@ package ifmo.jackalope;
 import com.tuneit.jackalope.dict.wiki.engine.core.SenseOption;
 import com.tuneit.jackalope.dict.wiki.engine.core.SenseOptionType;
 import com.tuneit.jackalope.dict.wiki.engine.core.WikiSense;
+import ifmo.jackalope.ruthes.RuthesSnapshot;
 import org.apache.commons.lang3.time.StopWatch;
 
 import java.util.*;
@@ -16,6 +17,9 @@ public class App {
         }
         SnapshotLoader wiki = new SnapshotLoader(args[0]);
         Collection<WikiSense> senses = wiki.get_senses();
+
+        RuthesSnapshot ruthesSnapshot = new RuthesSnapshot("E:\\yad\\UNIVERSITY\\DIPLOM\\ruthes");
+        System.out.println(ruthesSnapshot);
     }
 
     public static void fuzzySynonymSearch(SnapshotLoader wiki) {
