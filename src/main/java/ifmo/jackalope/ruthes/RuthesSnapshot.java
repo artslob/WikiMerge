@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Map;
 
 public class RuthesSnapshot {
-    private Map<Integer, Concept> concepts = new HashMap<>();
-    private Map<Integer, TextEntry> entries = new HashMap<>();
-    /* map.key -> concept_id; map.value -> [entry_id] */
-    private Map<Integer, List<Integer>> synonyms = new HashMap<>();
+    private Map<String, Concept> concepts = new HashMap<>();
+    private Map<String, TextEntry> entries = new HashMap<>();
+    /* map.key -> concept.id; map.value -> [entries.ids] */
+    private Map<String, List<String>> synonyms = new HashMap<>();
 
     public RuthesSnapshot(String dir_contain_xml) {
         try {
@@ -35,15 +35,15 @@ public class RuthesSnapshot {
         }
     }
 
-    public Map<Integer, Concept> getConcepts() {
+    public Map<String, Concept> getConcepts() {
         return concepts;
     }
 
-    public Map<Integer, TextEntry> getEntries() {
+    public Map<String, TextEntry> getEntries() {
         return entries;
     }
 
-    public Map<Integer, List<Integer>> getSynonyms() {
+    public Map<String, List<String>> getSynonyms() {
         return synonyms;
     }
 
@@ -61,14 +61,14 @@ public class RuthesSnapshot {
                         Attribute concept_id_attr = startElement.getAttributeByName(new QName("concept_id"));
                         Attribute entry_id_attr = startElement.getAttributeByName(new QName("entry_id"));
 
-                        Integer concept_id = Integer.parseInt(concept_id_attr.getValue());
-                        Integer entry_id = Integer.parseInt(entry_id_attr.getValue());
+                        String concept_id = concept_id_attr.getValue();
+                        String entry_id = entry_id_attr.getValue();
 
-                        List<Integer> entries = synonyms.get(concept_id);
+                        List<String> entries = synonyms.get(concept_id);
                         if (entries == null) {
-                            List<Integer> concepts = new ArrayList<>();
-                            concepts.add(entry_id);
-                            synonyms.put(concept_id, concepts);
+                            entries = new ArrayList<>();
+                            entries.add(entry_id);
+                            synonyms.put(concept_id, entries);
                         }
                         else {
                             entries.add(entry_id);
@@ -102,7 +102,7 @@ public class RuthesSnapshot {
                             current_entry = new TextEntry();
                             Attribute id_attr = startElement.getAttributeByName(new QName("id"));
                             if (id_attr != null) {
-                                current_entry.setId(Integer.parseInt(id_attr.getValue()));
+                                current_entry.setId(id_attr.getValue());
                             }
                             break;
                         case "name":
@@ -169,9 +169,8 @@ public class RuthesSnapshot {
                         Attribute to = startElement.getAttributeByName(new QName("to"));
                         Attribute name = startElement.getAttributeByName(new QName("name"));
 //                        Attribute asp = startElement.getAttributeByName(new QName("asp"));
-                        Concept from_concept = concepts.get(Integer.parseInt(from.getValue()));
-                        from_concept.getRelations().put(Integer.parseInt(to.getValue()),
-                                RelationType.fromString(name.getValue()));
+                        Concept from_concept = concepts.get(from.getValue());
+                        from_concept.getRelations().put(to.getValue(), RelationType.fromString(name.getValue()));
                     }
                     else if (!startElement.getName().getLocalPart().equals("relations")) {
                         throw new IllegalStateException("Unknown start element " +
@@ -198,7 +197,7 @@ public class RuthesSnapshot {
                             current_concept = new Concept();
                             Attribute id_attr = startElement.getAttributeByName(new QName("id"));
                             if (id_attr != null) {
-                                current_concept.setId(Integer.parseInt(id_attr.getValue()));
+                                current_concept.setId(id_attr.getValue());
                             }
                             break;
                         case "name":

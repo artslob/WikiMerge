@@ -6,20 +6,20 @@ import java.util.List;
 import java.util.Map;
 
 public class Concept {
-    private int id = 0;
+    private String id;
     private String name;
     private String gloss;
     private String domain;
-    /* this.id -> from; map.key -> to; map.value -> name */
-    private Map<Integer, RelationType> relations = new HashMap<>();
+    /* this.id -> from; map.key -> to.id; map.value -> name */
+    private Map<String, RelationType> relations = new HashMap<>();
     /* hold entries id */
-    private List<Integer> synonyms = new ArrayList<>();
+    private List<String> synonyms = new ArrayList<>();
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -47,19 +47,19 @@ public class Concept {
         this.domain = domain;
     }
 
-    public Map<Integer, RelationType> getRelations() {
+    public Map<String, RelationType> getRelations() {
         return relations;
     }
 
-    public void setRelations(Map<Integer, RelationType> relations) {
+    public void setRelations(Map<String, RelationType> relations) {
         this.relations = relations;
     }
 
-    public List<Integer> getSynonyms() {
+    public List<String> getSynonyms() {
         return synonyms;
     }
 
-    public void setSynonyms(List<Integer> synonyms) {
+    public void setSynonyms(List<String> synonyms) {
         this.synonyms = synonyms;
     }
 }

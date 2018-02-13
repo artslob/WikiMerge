@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TextEntry {
-    private int id;
+    private String id;
     private String name;
     private String lemma;
     private String main_word;
     private String synt_type;
     private String pos_string;
     /* hold concepts id */
-    private List<Integer> synonyms = new ArrayList<>();
+    private List<String> synonyms = new ArrayList<>();
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -61,11 +61,11 @@ public class TextEntry {
         this.pos_string = pos_string;
     }
 
-    public List<Integer> getSynonyms() {
+    public List<String> getSynonyms() {
         return synonyms;
     }
 
-    public void setSynonyms(List<Integer> synonyms) {
+    public void setSynonyms(List<String> synonyms) {
         this.synonyms = synonyms;
     }
 }
