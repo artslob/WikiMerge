@@ -27,8 +27,8 @@ public class RuthesSnapshot {
     public RuthesSnapshot(String dir_contain_xml) {
         try {
             conceptsLoad(dir_contain_xml);
-            relationsLoad(dir_contain_xml);
             entriesLoad(dir_contain_xml);
+            relationsLoad(dir_contain_xml);
             synonymsLoad(dir_contain_xml);
         } catch (IOException | XMLStreamException e) {
             e.printStackTrace();
