@@ -1,7 +1,5 @@
 package ifmo.jackalope.ruthes;
 
-import com.sun.xml.internal.stream.events.EndElementEvent;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
@@ -74,8 +72,8 @@ public class RuthesSnapshot {
                             entries.add(entry_id);
                         }
 
-                        this.concepts.get(concept_id).getSynonyms().add(entry_id);
-                        this.entries.get(entry_id).getSynonyms().add(concept_id);
+                        this.concepts.get(concept_id).getSynonyms().add(this.entries.get(entry_id));
+                        this.entries.get(entry_id).getSynonyms().add(this.concepts.get(concept_id));
                     }
                     else if (!startElement.getName().getLocalPart().equals("synonyms")) {
                         throw new IllegalStateException("Unknown start element " +
@@ -113,25 +111,25 @@ public class RuthesSnapshot {
                             break;
                         case "lemma":
                             xmlEvent = reader.nextEvent();
-                            if (!(xmlEvent instanceof EndElementEvent) && current_entry != null) {
+                            if (!(xmlEvent instanceof EndElement) && current_entry != null) {
                                 current_entry.setLemma(xmlEvent.asCharacters().getData());
                             }
                             break;
                         case "main_word":
                             xmlEvent = reader.nextEvent();
-                            if (!(xmlEvent instanceof EndElementEvent) && current_entry != null) {
+                            if (!(xmlEvent instanceof EndElement) && current_entry != null) {
                                 current_entry.setMain_word(xmlEvent.asCharacters().getData());
                             }
                             break;
                         case "synt_type":
                             xmlEvent = reader.nextEvent();
-                            if (!(xmlEvent instanceof EndElementEvent) && current_entry != null) {
+                            if (!(xmlEvent instanceof EndElement) && current_entry != null) {
                                 current_entry.setSynt_type(xmlEvent.asCharacters().getData());
                             }
                             break;
                         case "pos_string":
                             xmlEvent = reader.nextEvent();
-                            if (!(xmlEvent instanceof EndElementEvent) && current_entry != null) {
+                            if (!(xmlEvent instanceof EndElement) && current_entry != null) {
                                 current_entry.setPos_string(xmlEvent.asCharacters().getData());
                             }
                             break;
@@ -170,7 +168,9 @@ public class RuthesSnapshot {
                         Attribute name = startElement.getAttributeByName(new QName("name"));
 //                        Attribute asp = startElement.getAttributeByName(new QName("asp"));
                         Concept from_concept = concepts.get(from.getValue());
-                        from_concept.getRelations().put(to.getValue(), RelationType.fromString(name.getValue()));
+                        Concept to_concept = concepts.get(to.getValue());
+                        Relation relation = new Relation(to_concept, RelationType.fromString(name.getValue()));
+                        from_concept.getRelations().add(relation);
                     }
                     else if (!startElement.getName().getLocalPart().equals("relations")) {
                         throw new IllegalStateException("Unknown start element " +
@@ -208,7 +208,7 @@ public class RuthesSnapshot {
                             break;
                         case "gloss":
                             xmlEvent = reader.nextEvent();
-                            if (!(xmlEvent instanceof EndElementEvent) && current_concept != null) {
+                            if (!(xmlEvent instanceof EndElement) && current_concept != null) {
                                 current_concept.setGloss(xmlEvent.asCharacters().getData());
                             }
                             break;

@@ -10,10 +10,10 @@ public class Concept {
     private String name;
     private String gloss;
     private String domain;
-    /* this.id -> from; map.key -> to.id; map.value -> name */
-    private Map<String, RelationType> relations = new HashMap<>();
-    /* hold entries id */
-    private List<String> synonyms = new ArrayList<>();
+    /* this -> from; rel.concept -> to; rel.type -> type */
+    private List<Relation> relations = new ArrayList<>();
+    /* hold entries */
+    private List<TextEntry> synonyms = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -47,19 +47,19 @@ public class Concept {
         this.domain = domain;
     }
 
-    public Map<String, RelationType> getRelations() {
+    public List<Relation> getRelations() {
         return relations;
     }
 
-    public void setRelations(Map<String, RelationType> relations) {
+    public void setRelations(List<Relation> relations) {
         this.relations = relations;
     }
 
-    public List<String> getSynonyms() {
+    public List<TextEntry> getSynonyms() {
         return synonyms;
     }
 
-    public void setSynonyms(List<String> synonyms) {
+    public void setSynonyms(List<TextEntry> synonyms) {
         this.synonyms = synonyms;
     }
 

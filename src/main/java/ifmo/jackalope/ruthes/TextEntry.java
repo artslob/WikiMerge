@@ -11,7 +11,7 @@ public class TextEntry {
     private String synt_type;
     private String pos_string;
     /* hold concepts id */
-    private List<String> synonyms = new ArrayList<>();
+    private List<Concept> synonyms = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -61,11 +61,11 @@ public class TextEntry {
         this.pos_string = pos_string;
     }
 
-    public List<String> getSynonyms() {
+    public List<Concept> getSynonyms() {
         return synonyms;
     }
 
-    public void setSynonyms(List<String> synonyms) {
+    public void setSynonyms(List<Concept> synonyms) {
         this.synonyms = synonyms;
     }
 
