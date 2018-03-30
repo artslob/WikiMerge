@@ -5,6 +5,7 @@ import com.tuneit.jackalope.dict.wiki.engine.core.SenseOptionType;
 import com.tuneit.jackalope.dict.wiki.engine.core.WikiSense;
 import ifmo.jackalope.ruthes.RuthesSnapshot;
 import ifmo.jackalope.ruthes.RuthesSnapshotManager;
+import ifmo.jackalope.ruthes.rules.Rules;
 import org.apache.commons.lang3.time.StopWatch;
 
 import java.util.*;
@@ -17,11 +18,20 @@ public class App {
             System.exit(1);
         }
         SnapshotLoader wiki = new SnapshotLoader(args[0]);
-        Collection<WikiSense> senses = wiki.get_senses();
+        Map<String, WikiSense> wiki_senses = wiki.get_map_senses();
 
         RuthesSnapshotManager ruthesManager = new RuthesSnapshotManager("E:\\yad\\UNIVERSITY\\DIPLOM\\ruthes");
-        RuthesSnapshot snapshot = ruthesManager.getSnapshot();
-        System.out.println(snapshot);
+        RuthesSnapshot ruthes_snapshot = ruthesManager.getSnapshot();
+
+//        for (WikiSense s : wiki_senses.values()){
+//            if (s.getLinks().size() > 0) {
+//                System.out.println(s);
+//            }
+//        }
+
+        int result = Rules.apply(wiki_senses, ruthes_snapshot);
+        System.out.println(result + " links were restored.");
+        System.out.println("Program done.");
     }
 
     public static void fuzzySynonymSearch(SnapshotLoader wiki) {
