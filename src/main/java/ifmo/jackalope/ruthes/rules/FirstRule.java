@@ -19,7 +19,6 @@ public class FirstRule implements Rule {
     @Override
     public int apply(Map<String, WikiSense> wiki_senses, RuthesSnapshot ruthes) {
         int links_restored = 0;
-        // TODO: optionally cast to lower case wiki and ruthes lemmas
         Map<String, List<WikiSense>> lemma_to_sense = lemma_to_senses(wiki_senses);
 
         for (Concept concept : ruthes.getConcepts().values()) {
@@ -45,7 +44,7 @@ public class FirstRule implements Rule {
                     continue;
 
                 // TODO: тут надо сравнить концепты/синонимы имеющие связь с текущим concept и possible_target_senses (то есть будут сравниваться их связи, аналогично выше)
-                WikiSense most_similar_target_sense = find_most_similar_sense(possible_target_senses, wiki_senses, lemma_to_sense, );
+//                WikiSense most_similar_target_sense = find_most_similar_sense(possible_target_senses, wiki_senses, lemma_to_sense, );
             }
 
             // TODO: for links in source_sense

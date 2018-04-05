@@ -106,19 +106,19 @@ public class RuthesSnapshot {
                         case "name":
                             xmlEvent = reader.nextEvent();
                             if (current_entry != null) {
-                                current_entry.setName(xmlEvent.asCharacters().getData());
+                                current_entry.setName(xmlEvent.asCharacters().getData().toLowerCase());
                             }
                             break;
                         case "lemma":
                             xmlEvent = reader.nextEvent();
                             if (!(xmlEvent instanceof EndElement) && current_entry != null) {
-                                current_entry.setLemma(xmlEvent.asCharacters().getData());
+                                current_entry.setLemma(xmlEvent.asCharacters().getData().toLowerCase());
                             }
                             break;
                         case "main_word":
                             xmlEvent = reader.nextEvent();
                             if (!(xmlEvent instanceof EndElement) && current_entry != null) {
-                                current_entry.setMain_word(xmlEvent.asCharacters().getData());
+                                current_entry.setMain_word(xmlEvent.asCharacters().getData().toLowerCase());
                             }
                             break;
                         case "synt_type":
@@ -203,13 +203,13 @@ public class RuthesSnapshot {
                         case "name":
                             xmlEvent = reader.nextEvent();
                             if (current_concept != null) {
-                                current_concept.setName(xmlEvent.asCharacters().getData());
+                                current_concept.setName(xmlEvent.asCharacters().getData().toLowerCase());
                             }
                             break;
                         case "gloss":
                             xmlEvent = reader.nextEvent();
                             if (!(xmlEvent instanceof EndElement) && current_concept != null) {
-                                current_concept.setGloss(xmlEvent.asCharacters().getData());
+                                current_concept.setGloss(xmlEvent.asCharacters().getData().toLowerCase());
                             }
                             break;
                         case "domain":
