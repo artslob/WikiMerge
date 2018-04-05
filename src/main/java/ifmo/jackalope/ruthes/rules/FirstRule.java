@@ -4,6 +4,8 @@ import com.tuneit.jackalope.dict.wiki.engine.core.SenseOption;
 import com.tuneit.jackalope.dict.wiki.engine.core.SenseOptionType;
 import com.tuneit.jackalope.dict.wiki.engine.core.WikiSense;
 import ifmo.jackalope.ruthes.Concept;
+import ifmo.jackalope.ruthes.Relation;
+import ifmo.jackalope.ruthes.RelationType;
 import ifmo.jackalope.ruthes.RuthesSnapshot;
 
 import java.util.ArrayList;
@@ -30,11 +32,10 @@ public class FirstRule implements Rule {
             if (source_sense == null)
                 continue;
 
-            // TODO: для sense_option - попробовать определить к какому сенсу идёт ссылка (корректировка текущих связей)
             // TODO: для связей в concept - попробовать найти аналогичные связи в вики (построение новых)
-            // TODO: для links - попробовать найти аналогичную связь в рутезе и экспортировать связи этого узла в вики (новые для сенса, на который указывает link)
 
-            // это корректировка существующих связей
+
+            // TODO: для sense_option - попробовать определить к какому сенсу идёт ссылка (корректировка текущих связей)
             for (SenseOption option : source_sense.getAllOptions()){
                 String lemma = option.getOption().toString();
                 SenseOptionType option_type = option.getType();
@@ -43,17 +44,41 @@ public class FirstRule implements Rule {
                 if (possible_target_senses == null || possible_target_senses.size() < 1)
                     continue;
 
+                // TODO: тут можно восстанавливать больше, чем одну связь
+
                 // TODO: тут надо сравнить концепты/синонимы имеющие связь с текущим concept и possible_target_senses (то есть будут сравниваться их связи, аналогично выше)
-//                WikiSense most_similar_target_sense = find_most_similar_sense(possible_target_senses, wiki_senses, lemma_to_sense, );
+                WikiSense most_similar_target_sense = find_most_similar_sense_for_option(wiki_senses, lemma_to_sense, possible_target_senses, concept);
             }
 
-            // TODO: for links in source_sense
+            // TODO: для links - попробовать найти аналогичную связь в рутезе и экспортировать связи этого узла в вики (новые для сенса, на который указывает link)
 
 
             System.out.println();
         }
 
         return links_restored;
+    }
+
+
+    private WikiSense find_most_similar_sense_for_option(
+                                        Map<String, WikiSense> wiki_senses, Map<String, List<WikiSense>> lemma_to_sense,
+                                        List<WikiSense> senses, Concept concept)
+    {
+        if (senses == null || senses.size() == 0)
+            return null;
+
+        WikiSense result = null;
+
+        for (Relation relation : concept.getRelations()){
+            Concept adj_concept = relation.getConcept();
+            RelationType adj_type = relation.getRelationType();
+
+            for (WikiSense adj_sense : senses) {
+
+            }
+        }
+
+        return result;
     }
 
     private WikiSense find_most_similar_sense(List<WikiSense> source_senses, Map<String, WikiSense> wiki_senses,
