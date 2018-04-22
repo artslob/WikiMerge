@@ -13,14 +13,14 @@ import java.util.*;
 
 public class App {
     public static void main(String[] args) {
-        if (args.length == 0) {
-            System.out.println("Provide first argument - path to snapshot!");
+        if (args.length < 2) {
+            System.out.println("Usage:\narg 0: path to wiki snapshot\narg 1: path to ruthes directory");
             System.exit(1);
         }
         SnapshotLoader wiki = new SnapshotLoader(args[0]);
         Map<String, WikiSense> wiki_senses = wiki.get_map_senses();
 
-        RuthesSnapshotManager ruthesManager = new RuthesSnapshotManager("E:\\yad\\UNIVERSITY\\DIPLOM\\ruthes");
+        RuthesSnapshotManager ruthesManager = new RuthesSnapshotManager(args[1]);
         RuthesSnapshot ruthes_snapshot = ruthesManager.getSnapshot();
 
 //        for (WikiSense s : wiki_senses.values()){
