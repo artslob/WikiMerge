@@ -39,10 +39,7 @@ public class FirstRule implements Rule {
             if (source_sense == null)
                 continue;
 
-            // TODO: для связей в concept - попробовать найти аналогичные связи в вики (построение новых)
-
-
-            // TODO: для sense_option - попробовать определить к какому сенсу идёт ссылка (корректировка текущих связей)
+            // корректировка связей: для option связей source_sense - попытка определить к какому сенсу идёт ссылка
             for (SenseOption option : source_sense.getAllOptions()) {
                 String lemma = option.getOption().toString();
                 SenseOptionType option_type = option.getType(); // TODO: compare
@@ -52,15 +49,23 @@ public class FirstRule implements Rule {
                     continue;
 
                 // TODO: тут можно восстанавливать больше, чем одну связь
-
-                // TODO: тут надо сравнить концепты/синонимы имеющие связь с текущим concept и possible_target_senses (то есть будут сравниваться их связи, аналогично выше)
+                // сравнение концептов/текстовых вхождений, имеющих связь с текущим concept и сенсов,
+                // имеющих связь с текущим source_sense (possible_target_senses)
                 WikiSense most_similar_target_sense = find_most_similar_sense_for_option(possible_target_senses, concept);
+                if (most_similar_target_sense == null)
+                    continue;
+
+                String log = String.format("Can restore link from sense: %s\n\twith gloss: %s\n" +
+                        "\tto sense: %s\n\twith gloss: %s\n" +
+                        "\tby concept: %s",
+                        source_sense.getLemma(), source_sense.getGloss(),
+                        most_similar_target_sense.getLemma(), most_similar_target_sense.getGloss(),
+                        concept.getName());
+                System.out.println(log);
             }
 
             // TODO: для links - попробовать найти аналогичную связь в рутезе и экспортировать связи этого узла в вики (новые для сенса, на который указывает link)
-
-
-            System.out.println();
+            // TODO: для связей в concept - попробовать найти аналогичные связи в вики (построение новых)
         }
 
         return links_restored;
