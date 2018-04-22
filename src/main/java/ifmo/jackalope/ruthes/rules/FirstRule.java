@@ -46,7 +46,7 @@ public class FirstRule implements Rule {
 
 
             // TODO: для sense_option - попробовать определить к какому сенсу идёт ссылка (корректировка текущих связей)
-            for (SenseOption option : source_sense.getAllOptions()){
+            for (SenseOption option : source_sense.getAllOptions()) {
                 String lemma = option.getOption().toString();
                 SenseOptionType option_type = option.getType();
 
@@ -76,7 +76,7 @@ public class FirstRule implements Rule {
 
         WikiSense result = null;
 
-        for (Relation relation : concept.getRelations()){
+        for (Relation relation : concept.getRelations()) {
             Concept adj_concept = relation.getConcept();
             RelationType adj_type = relation.getRelationType();
 
@@ -88,8 +88,7 @@ public class FirstRule implements Rule {
         return result;
     }
 
-    private WikiSense find_most_similar_sense(List<WikiSense> source_senses, Concept concept)
-    {
+    private WikiSense find_most_similar_sense(List<WikiSense> source_senses, Concept concept) {
         if (source_senses.size() <= 0)
             return null;
         if (source_senses.size() == 1)
@@ -111,7 +110,7 @@ public class FirstRule implements Rule {
         int similarity = 0;
         for (SenseOption option : sense.getAllOptions()) {
             String lemma = option.getOption().toString();
-            SenseOptionType option_type= option.getType();
+            SenseOptionType option_type = option.getType();
 
             if (lemma.equalsIgnoreCase(concept.getName())) // TODO: check link type similarity
                 similarity++;
