@@ -18,17 +18,27 @@ import java.util.Map;
  * сходства связей сенса вики и рутеза
  */
 public class FirstRule implements Rule {
+
+    FirstRule(final Map<String, WikiSense> wiki_senses, final RuthesSnapshot ruthes) {
+        this.wiki_senses = wiki_senses;
+        this.lemma_to_sense = lemma_to_senses(wiki_senses);
+        this.ruthes = ruthes;
+    }
+
+    private final Map<String, WikiSense> wiki_senses;
+    private final Map<String, List<WikiSense>> lemma_to_sense;
+    private final RuthesSnapshot ruthes;
+
     @Override
-    public int apply(Map<String, WikiSense> wiki_senses, RuthesSnapshot ruthes) {
+    public int apply() {
         int links_restored = 0;
-        Map<String, List<WikiSense>> lemma_to_sense = lemma_to_senses(wiki_senses);
 
         for (Concept concept : ruthes.getConcepts().values()) {
             List<WikiSense> source_senses = lemma_to_sense.get(concept.getName().toLowerCase());
             if (source_senses == null || source_senses.size() < 1)
                 continue;
 
-            WikiSense source_sense = find_most_similar_sense(source_senses, wiki_senses, lemma_to_sense, concept);
+            WikiSense source_sense = find_most_similar_sense(source_senses, concept);
             if (source_sense == null)
                 continue;
 
@@ -47,7 +57,7 @@ public class FirstRule implements Rule {
                 // TODO: тут можно восстанавливать больше, чем одну связь
 
                 // TODO: тут надо сравнить концепты/синонимы имеющие связь с текущим concept и possible_target_senses (то есть будут сравниваться их связи, аналогично выше)
-                WikiSense most_similar_target_sense = find_most_similar_sense_for_option(wiki_senses, lemma_to_sense, possible_target_senses, concept);
+                WikiSense most_similar_target_sense = find_most_similar_sense_for_option(possible_target_senses, concept);
             }
 
             // TODO: для links - попробовать найти аналогичную связь в рутезе и экспортировать связи этого узла в вики (новые для сенса, на который указывает link)
@@ -60,10 +70,7 @@ public class FirstRule implements Rule {
     }
 
 
-    private WikiSense find_most_similar_sense_for_option(
-                                        Map<String, WikiSense> wiki_senses, Map<String, List<WikiSense>> lemma_to_sense,
-                                        List<WikiSense> senses, Concept concept)
-    {
+    private WikiSense find_most_similar_sense_for_option(List<WikiSense> senses, Concept concept) {
         if (senses == null || senses.size() == 0)
             return null;
 
@@ -81,8 +88,7 @@ public class FirstRule implements Rule {
         return result;
     }
 
-    private WikiSense find_most_similar_sense(List<WikiSense> source_senses, Map<String, WikiSense> wiki_senses,
-                                              Map<String, List<WikiSense>> lemma_to_sense, Concept concept)
+    private WikiSense find_most_similar_sense(List<WikiSense> source_senses, Concept concept)
     {
         if (source_senses.size() <= 0)
             return null;
@@ -92,7 +98,7 @@ public class FirstRule implements Rule {
         WikiSense current_sense = null;
         int similarity = 0;
         for (WikiSense sense : source_senses) {
-            int current_similarity = compare_links(wiki_senses, lemma_to_sense, sense, concept);
+            int current_similarity = compare_links(sense, concept);
             if (current_similarity > similarity) {
                 current_sense = sense;
                 similarity = current_similarity;
@@ -101,9 +107,7 @@ public class FirstRule implements Rule {
         return current_sense;
     }
 
-    private int compare_links(Map<String, WikiSense> wiki_senses, Map<String, List<WikiSense>> lemma_to_sense,
-                              WikiSense sense, Concept concept)
-    {
+    private int compare_links(WikiSense sense, Concept concept) {
         int similarity = 0;
         for (SenseOption option : sense.getAllOptions()) {
             String lemma = option.getOption().toString();

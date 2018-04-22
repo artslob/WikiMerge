@@ -14,13 +14,13 @@ public class Rules {
     public static int apply(Map<String, WikiSense> wiki_senses, RuthesSnapshot ruthes) {
 
         if (rules.isEmpty()) {
-            rules.add(new FirstRule());
+            rules.add(new FirstRule(wiki_senses, ruthes));
         }
 
         int total = 0;
 
         for (Rule rule : rules) {
-            int apply_result = rule.apply(wiki_senses, ruthes);
+            int apply_result = rule.apply();
             total += apply_result;
             System.out.println("Rule " + rule + " created " + apply_result + " links");
         }

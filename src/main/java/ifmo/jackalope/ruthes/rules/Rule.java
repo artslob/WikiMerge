@@ -6,5 +6,5 @@ import ifmo.jackalope.ruthes.RuthesSnapshot;
 import java.util.Map;
 
 interface Rule {
-    int apply(Map<String, WikiSense> wiki_senses, RuthesSnapshot ruthes);
+    int apply();
 }
