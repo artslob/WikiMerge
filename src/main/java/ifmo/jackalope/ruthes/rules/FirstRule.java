@@ -61,6 +61,7 @@ public class FirstRule implements Rule {
                         source_sense.getLemma(), source_sense.getGloss(),
                         most_similar_target_sense.getLemma(), most_similar_target_sense.getGloss(),
                         concept.getName());
+                links_restored++;
                 System.out.println(log);
             }
 
