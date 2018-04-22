@@ -3,10 +3,7 @@ package ifmo.jackalope.ruthes.rules;
 import com.tuneit.jackalope.dict.wiki.engine.core.SenseOption;
 import com.tuneit.jackalope.dict.wiki.engine.core.SenseOptionType;
 import com.tuneit.jackalope.dict.wiki.engine.core.WikiSense;
-import ifmo.jackalope.ruthes.Concept;
-import ifmo.jackalope.ruthes.Relation;
-import ifmo.jackalope.ruthes.RelationType;
-import ifmo.jackalope.ruthes.RuthesSnapshot;
+import ifmo.jackalope.ruthes.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,19 +105,44 @@ public class FirstRule implements Rule {
 
     private int compare_links(WikiSense sense, Concept concept) {
         int similarity = 0;
-        for (SenseOption option : sense.getAllOptions()) {
-            String lemma = option.getOption().toString();
-            SenseOptionType option_type = option.getType();
 
-            if (lemma.equalsIgnoreCase(concept.getName())) // TODO: check link type similarity
-                similarity++;
+        for (Relation relation : concept.getRelations()) {
+            Concept target_concept = relation.getConcept();
+            RelationType relation_type = relation.getRelationType(); // TODO: compare link type
+
+            for (SenseOption option : sense.getAllOptions()) {
+                String option_target_lemma = option.getOption().toString();
+                SenseOptionType option_type = option.getType(); // TODO: compare link type
+
+                if (option_target_lemma.equalsIgnoreCase(target_concept.getName()))
+                    similarity++;
+            }
+
+            for (Map.Entry<String, SenseOptionType> entry : sense.getLinks().entrySet()) {
+                WikiSense link_target_sense = wiki_senses.get(entry.getKey());
+                SenseOptionType sense_option = entry.getValue(); // TODO: compare link type
+
+                if (link_target_sense.getLemma().equalsIgnoreCase(target_concept.getName())) // TODO: check link type similarity
+                    similarity++;
+            }
         }
 
-        for (Map.Entry<String, SenseOptionType> entry : sense.getLinks().entrySet()) {
-            WikiSense link_target_sense = wiki_senses.get(entry.getKey());
+        for (TextEntry synonym : concept.getSynonyms()) {
+            for (SenseOption option : sense.getAllOptions()) {
+                String option_target_lemma = option.getOption().toString();
+                SenseOptionType option_type = option.getType(); // TODO: compare link type
 
-            if (link_target_sense.getLemma().equalsIgnoreCase(concept.getName())) // TODO: check link type similarity
-                similarity++;
+                if (option_target_lemma.equalsIgnoreCase(synonym.getName()))
+                    similarity++;
+            }
+
+            for (Map.Entry<String, SenseOptionType> entry : sense.getLinks().entrySet()) {
+                WikiSense link_target_sense = wiki_senses.get(entry.getKey());
+                SenseOptionType sense_option = entry.getValue(); // TODO: compare link type
+
+                if (link_target_sense.getLemma().equalsIgnoreCase(synonym.getName())) // TODO: check link type similarity
+                    similarity++;
+            }
         }
 
         return similarity;
