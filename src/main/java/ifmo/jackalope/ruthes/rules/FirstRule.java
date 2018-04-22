@@ -45,7 +45,7 @@ public class FirstRule implements Rule {
             // TODO: для sense_option - попробовать определить к какому сенсу идёт ссылка (корректировка текущих связей)
             for (SenseOption option : source_sense.getAllOptions()) {
                 String lemma = option.getOption().toString();
-                SenseOptionType option_type = option.getType();
+                SenseOptionType option_type = option.getType(); // TODO: compare
 
                 List<WikiSense> possible_target_senses = lemma_to_sense.get(lemma);
                 if (possible_target_senses == null || possible_target_senses.size() < 1)
@@ -70,15 +70,34 @@ public class FirstRule implements Rule {
     private WikiSense find_most_similar_sense_for_option(List<WikiSense> senses, Concept concept) {
         if (senses == null || senses.size() == 0)
             return null;
+        if (senses.size() == 1)
+            return senses.get(0);
 
         WikiSense result = null;
+        int similarity = 0;
+
+        // TODO: check link type
 
         for (Relation relation : concept.getRelations()) {
             Concept adj_concept = relation.getConcept();
             RelationType adj_type = relation.getRelationType();
 
             for (WikiSense adj_sense : senses) {
+                int current_similarity = compare_links(adj_sense, adj_concept);
+                if (current_similarity > similarity) {
+                    similarity = current_similarity;
+                    result = adj_sense;
+                }
+            }
+        }
 
+        for (TextEntry synonym : concept.getSynonyms()) {
+            for (WikiSense adj_sense : senses) {
+                int current_similarity = compare_links(adj_sense, synonym);
+                if (current_similarity > similarity) {
+                    similarity = current_similarity;
+                    result = adj_sense;
+                }
             }
         }
 
@@ -101,6 +120,32 @@ public class FirstRule implements Rule {
             }
         }
         return current_sense;
+    }
+
+    private int compare_links(WikiSense sense, TextEntry text_entry) {
+        int similarity = 0;
+
+        for (Concept target_concept : text_entry.getSynonyms()) {
+            // TODO: compare link type (synonym)
+
+            for (SenseOption option : sense.getAllOptions()) {
+                String option_target_lemma = option.getOption().toString();
+                SenseOptionType option_type = option.getType(); // TODO: compare link type
+
+                if (option_target_lemma.equalsIgnoreCase(target_concept.getName()))
+                    similarity++;
+            }
+
+            for (Map.Entry<String, SenseOptionType> entry : sense.getLinks().entrySet()) {
+                WikiSense link_target_sense = wiki_senses.get(entry.getKey());
+                SenseOptionType sense_option = entry.getValue(); // TODO: compare link type
+
+                if (link_target_sense.getLemma().equalsIgnoreCase(target_concept.getName())) // TODO: check link type similarity
+                    similarity++;
+            }
+        }
+
+        return similarity;
     }
 
     private int compare_links(WikiSense sense, Concept concept) {
