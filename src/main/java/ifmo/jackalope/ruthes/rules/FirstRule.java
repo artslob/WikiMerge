@@ -69,7 +69,66 @@ public class FirstRule implements Rule {
             // TODO: для связей в concept - попробовать найти аналогичные связи в вики (построение новых)
         }
 
+        for (TextEntry text_entry : ruthes.getEntries().values()) {
+            List<WikiSense> source_senses = lemma_to_sense.get(text_entry.getName().toLowerCase());
+            if (source_senses == null || source_senses.size() < 1)
+                continue;
+
+            WikiSense source_sense = find_most_similar_sense(source_senses, text_entry);
+            if (source_sense == null)
+                continue;
+
+            // корректировка связей: для option связей source_sense - попытка определить к какому сенсу идёт ссылка
+            for (SenseOption option : source_sense.getAllOptions()) {
+                String lemma = option.getOption().toString();
+                SenseOptionType option_type = option.getType(); // TODO: compare
+
+                List<WikiSense> possible_target_senses = lemma_to_sense.get(lemma);
+                if (possible_target_senses == null || possible_target_senses.size() < 1)
+                    continue;
+
+                // сравнение концептов/текстовых вхождений, имеющих связь с текущим concept и сенсов,
+                // имеющих связь с текущим source_sense (possible_target_senses)
+                WikiSense most_similar_target_sense = find_most_similar_sense_for_option(possible_target_senses, text_entry);
+                if (most_similar_target_sense == null)
+                    continue;
+
+                String log = String.format("Can restore link from sense: %s\n\twith gloss: %s\n" +
+                        "\tto sense: %s\n\twith gloss: %s\n" +
+                        "\tby text_entry: %s",
+                        source_sense.getLemma(), source_sense.getGloss(),
+                        most_similar_target_sense.getLemma(), most_similar_target_sense.getGloss(),
+                        text_entry.getName());
+                links_restored++;
+                System.out.println(log);
+            }
+        }
+
         return links_restored;
+    }
+
+    private WikiSense find_most_similar_sense_for_option(List<WikiSense> senses, TextEntry text_entry) {
+        if (senses == null || senses.size() == 0)
+            return null;
+        if (senses.size() == 1)
+            return senses.get(0);
+
+        WikiSense result = null;
+        int similarity = 0;
+
+        // TODO: check link type
+
+        for (Concept synonym : text_entry.getSynonyms()) {
+            for (WikiSense adj_sense : senses) {
+                int current_similarity = compare_links(adj_sense, synonym);
+                if (current_similarity > similarity) {
+                    similarity = current_similarity;
+                    result = adj_sense;
+                }
+            }
+        }
+
+        return result;
     }
 
 
@@ -108,6 +167,24 @@ public class FirstRule implements Rule {
         }
 
         return result;
+    }
+
+    private WikiSense find_most_similar_sense(List<WikiSense> source_senses, TextEntry text_entry) {
+        if (source_senses.size() <= 0)
+            return null;
+        if (source_senses.size() == 1)
+            return source_senses.get(0);
+
+        WikiSense current_sense = null;
+        int similarity = 0;
+        for (WikiSense sense : source_senses) {
+            int current_similarity = compare_links(sense, text_entry);
+            if (current_similarity > similarity) {
+                current_sense = sense;
+                similarity = current_similarity;
+            }
+        }
+        return current_sense;
     }
 
     private WikiSense find_most_similar_sense(List<WikiSense> source_senses, Concept concept) {
