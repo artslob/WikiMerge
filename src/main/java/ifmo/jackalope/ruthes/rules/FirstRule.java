@@ -57,7 +57,7 @@ public class FirstRule implements Rule {
 
                 String log = String.format("Can restore link from sense: %s\n\twith gloss: %s\n" +
                         "\tto sense: %s\n\twith gloss: %s\n" +
-                        "\tby concept: %s",
+                        "\tby concept: %s\n",
                         source_sense.getLemma(), source_sense.getGloss(),
                         most_similar_target_sense.getLemma(), most_similar_target_sense.getGloss(),
                         concept.getName());
@@ -95,7 +95,7 @@ public class FirstRule implements Rule {
 
                 String log = String.format("Can restore link from sense: %s\n\twith gloss: %s\n" +
                         "\tto sense: %s\n\twith gloss: %s\n" +
-                        "\tby text_entry: %s",
+                        "\tby text_entry: %s\n",
                         source_sense.getLemma(), source_sense.getGloss(),
                         most_similar_target_sense.getLemma(), most_similar_target_sense.getGloss(),
                         text_entry.getName());
