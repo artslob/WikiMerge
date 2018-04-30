@@ -42,7 +42,7 @@ public class FirstRule implements Rule {
             // корректировка связей: для option связей source_sense - попытка определить к какому сенсу идёт ссылка
             for (SenseOption option : source_sense.getAllOptions()) {
                 String lemma = option.getOption().toString();
-                SenseOptionType option_type = option.getType(); // TODO: compare
+                SenseOptionType option_type = option.getType();
 
                 List<WikiSense> possible_target_senses = lemma_to_sense.get(lemma);
                 if (possible_target_senses == null || possible_target_senses.size() < 1)
@@ -51,7 +51,7 @@ public class FirstRule implements Rule {
                 // TODO: тут можно восстанавливать больше, чем одну связь
                 // сравнение концептов/текстовых вхождений, имеющих связь с текущим concept и сенсов,
                 // имеющих связь с текущим source_sense (possible_target_senses)
-                WikiSense most_similar_target_sense = find_most_similar_sense_for_option(possible_target_senses, concept);
+                WikiSense most_similar_target_sense = find_most_similar_sense_for_option(possible_target_senses, concept, option_type);
                 if (most_similar_target_sense == null)
                     continue;
 
@@ -81,7 +81,7 @@ public class FirstRule implements Rule {
             // корректировка связей: для option связей source_sense - попытка определить к какому сенсу идёт ссылка
             for (SenseOption option : source_sense.getAllOptions()) {
                 String lemma = option.getOption().toString();
-                SenseOptionType option_type = option.getType(); // TODO: compare
+                SenseOptionType option_type = option.getType();
 
                 List<WikiSense> possible_target_senses = lemma_to_sense.get(lemma);
                 if (possible_target_senses == null || possible_target_senses.size() < 1)
@@ -89,7 +89,7 @@ public class FirstRule implements Rule {
 
                 // сравнение концептов/текстовых вхождений, имеющих связь с текущим concept и сенсов,
                 // имеющих связь с текущим source_sense (possible_target_senses)
-                WikiSense most_similar_target_sense = find_most_similar_sense_for_option(possible_target_senses, text_entry);
+                WikiSense most_similar_target_sense = find_most_similar_sense_for_option(possible_target_senses, text_entry, option_type);
                 if (most_similar_target_sense == null)
                     continue;
 
@@ -107,7 +107,9 @@ public class FirstRule implements Rule {
         return links_restored;
     }
 
-    private WikiSense find_most_similar_sense_for_option(List<WikiSense> senses, TextEntry text_entry) {
+    private WikiSense find_most_similar_sense_for_option(List<WikiSense> senses, TextEntry text_entry, SenseOptionType option_type) {
+        if (!is_synonym_relation(option_type))
+            return null;
         if (senses == null || senses.size() == 0)
             return null;
         if (senses.size() == 1)
@@ -115,8 +117,6 @@ public class FirstRule implements Rule {
 
         WikiSense result = null;
         int similarity = 0;
-
-        // TODO: check link type
 
         for (Concept synonym : text_entry.getSynonyms()) {
             for (WikiSense adj_sense : senses) {
@@ -132,7 +132,7 @@ public class FirstRule implements Rule {
     }
 
 
-    private WikiSense find_most_similar_sense_for_option(List<WikiSense> senses, Concept concept) {
+    private WikiSense find_most_similar_sense_for_option(List<WikiSense> senses, Concept concept, SenseOptionType option_type) {
         if (senses == null || senses.size() == 0)
             return null;
         if (senses.size() == 1)
@@ -141,27 +141,31 @@ public class FirstRule implements Rule {
         WikiSense result = null;
         int similarity = 0;
 
-        // TODO: check link type
-
-        for (Relation relation : concept.getRelations()) {
-            Concept adj_concept = relation.getConcept();
-            RelationType adj_type = relation.getRelationType();
-
-            for (WikiSense adj_sense : senses) {
-                int current_similarity = compare_links(adj_sense, adj_concept);
-                if (current_similarity > similarity) {
-                    similarity = current_similarity;
-                    result = adj_sense;
+        if (is_synonym_relation(option_type)) {
+            for (TextEntry synonym : concept.getSynonyms()) {
+                for (WikiSense adj_sense : senses) {
+                    int current_similarity = compare_links(adj_sense, synonym);
+                    if (current_similarity > similarity) {
+                        similarity = current_similarity;
+                        result = adj_sense;
+                    }
                 }
             }
         }
+        else {
+            for (Relation relation : concept.getRelations()) {
+                Concept adj_concept = relation.getConcept();
+                RelationType adj_relation_type = relation.getRelationType();
 
-        for (TextEntry synonym : concept.getSynonyms()) {
-            for (WikiSense adj_sense : senses) {
-                int current_similarity = compare_links(adj_sense, synonym);
-                if (current_similarity > similarity) {
-                    similarity = current_similarity;
-                    result = adj_sense;
+                if (!compare_link_types(adj_relation_type, option_type))
+                    continue;
+
+                for (WikiSense adj_sense : senses) {
+                    int current_similarity = compare_links(adj_sense, adj_concept);
+                    if (current_similarity > similarity) {
+                        similarity = current_similarity;
+                        result = adj_sense;
+                    }
                 }
             }
         }
@@ -209,21 +213,19 @@ public class FirstRule implements Rule {
         int similarity = 0;
 
         for (Concept target_concept : text_entry.getSynonyms()) {
-            // TODO: compare link type (synonym)
-
             for (SenseOption option : sense.getAllOptions()) {
                 String option_target_lemma = option.getOption().toString();
-                SenseOptionType option_type = option.getType(); // TODO: compare link type
+                SenseOptionType option_type = option.getType();
 
-                if (option_target_lemma.equalsIgnoreCase(target_concept.getName()))
+                if (option_target_lemma.equalsIgnoreCase(target_concept.getName()) && is_synonym_relation(option_type))
                     similarity++;
             }
 
             for (Map.Entry<String, SenseOptionType> entry : sense.getLinks().entrySet()) {
                 WikiSense link_target_sense = wiki_senses.get(entry.getKey());
-                SenseOptionType sense_option = entry.getValue(); // TODO: compare link type
+                SenseOptionType sense_option = entry.getValue();
 
-                if (link_target_sense.getLemma().equalsIgnoreCase(target_concept.getName())) // TODO: check link type similarity
+                if (link_target_sense.getLemma().equalsIgnoreCase(target_concept.getName()) && is_synonym_relation(sense_option))
                     similarity++;
             }
         }
@@ -236,21 +238,21 @@ public class FirstRule implements Rule {
 
         for (Relation relation : concept.getRelations()) {
             Concept target_concept = relation.getConcept();
-            RelationType relation_type = relation.getRelationType(); // TODO: compare link type
+            RelationType relation_type = relation.getRelationType();
 
             for (SenseOption option : sense.getAllOptions()) {
                 String option_target_lemma = option.getOption().toString();
-                SenseOptionType option_type = option.getType(); // TODO: compare link type
+                SenseOptionType option_type = option.getType();
 
-                if (option_target_lemma.equalsIgnoreCase(target_concept.getName()))
+                if (option_target_lemma.equalsIgnoreCase(target_concept.getName()) && compare_link_types(relation_type, option_type))
                     similarity++;
             }
 
             for (Map.Entry<String, SenseOptionType> entry : sense.getLinks().entrySet()) {
                 WikiSense link_target_sense = wiki_senses.get(entry.getKey());
-                SenseOptionType sense_option = entry.getValue(); // TODO: compare link type
+                SenseOptionType sense_option = entry.getValue();
 
-                if (link_target_sense.getLemma().equalsIgnoreCase(target_concept.getName())) // TODO: check link type similarity
+                if (link_target_sense.getLemma().equalsIgnoreCase(target_concept.getName()) && compare_link_types(relation_type, sense_option))
                     similarity++;
             }
         }
@@ -258,17 +260,17 @@ public class FirstRule implements Rule {
         for (TextEntry synonym : concept.getSynonyms()) {
             for (SenseOption option : sense.getAllOptions()) {
                 String option_target_lemma = option.getOption().toString();
-                SenseOptionType option_type = option.getType(); // TODO: compare link type
+                SenseOptionType option_type = option.getType();
 
-                if (option_target_lemma.equalsIgnoreCase(synonym.getName()))
+                if (option_target_lemma.equalsIgnoreCase(synonym.getName()) && is_synonym_relation(option_type))
                     similarity++;
             }
 
             for (Map.Entry<String, SenseOptionType> entry : sense.getLinks().entrySet()) {
                 WikiSense link_target_sense = wiki_senses.get(entry.getKey());
-                SenseOptionType sense_option = entry.getValue(); // TODO: compare link type
+                SenseOptionType sense_option = entry.getValue();
 
-                if (link_target_sense.getLemma().equalsIgnoreCase(synonym.getName())) // TODO: check link type similarity
+                if (link_target_sense.getLemma().equalsIgnoreCase(synonym.getName()) && is_synonym_relation(sense_option))
                     similarity++;
             }
         }
@@ -316,7 +318,7 @@ public class FirstRule implements Rule {
                 );
     }
 
-    public boolean is_synonym_relation(SenseOptionType wiki_link) {
+    private boolean is_synonym_relation(SenseOptionType wiki_link) {
         return wiki_link == SenseOptionType.SYNONYM;
     }
 
