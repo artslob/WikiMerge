@@ -277,42 +277,42 @@ public class FirstRule implements Rule {
     }
 
     private boolean compare_link_types(RelationType ruthes_link, SenseOptionType wiki_link) {
-        if (ruthes_link.name().equals("HYPONYM") && wiki_link.name().equals("HYPONYM")) // НИЖЕ
+        if (ruthes_link == RelationType.HYPONYM && wiki_link == SenseOptionType.HYPONYM) // НИЖЕ
             return true;
 
-        if (ruthes_link.name().equals("HYPERNYM") && wiki_link.name().equals("HYPERNYM")) // ВЫШЕ
+        if (ruthes_link == RelationType.HYPERNYM && wiki_link == SenseOptionType.HYPERNYM) // ВЫШЕ
             return true;
 
-        if (ruthes_link.name().equals("HOLONYM") && wiki_link.name().equals("HOLONYM")) // ЦЕЛОЕ
+        if (ruthes_link == RelationType.HOLONYM && wiki_link == SenseOptionType.HOLONYM) // ЦЕЛОЕ
             return true;
 
-        if (ruthes_link.name().equals("MERONYM") && wiki_link.name().equals("MERONYM")) // ЧАСТЬ
+        if (ruthes_link == RelationType.MERONYM && wiki_link == SenseOptionType.MERONYM) // ЧАСТЬ
             return true;
 
-        if (ruthes_link.name().equals("DEPEND_ON") && wiki_link.name().equals("RELATED_TERM")) // АСЦ1
+        if (ruthes_link == RelationType.DEPEND_ON && wiki_link == SenseOptionType.RELATED_TERM) // АСЦ1
             return true;
 
-        if (ruthes_link.name().equals("HAS_DEPEND") &&
+        if (ruthes_link == RelationType.HAS_DEPEND &&
                 (
-                    wiki_link.name().equals("DERIVED_TERM") ||
-                    wiki_link.name().equals("TRANSLATION") ||
-                    wiki_link.name().equals("PRONUNCIATION") ||
-                    wiki_link.name().equals("ALTERNATIVE_FORM") ||
-                    wiki_link.name().equals("DESCENDANT")
+                    wiki_link == SenseOptionType.DERIVED_TERM ||
+                    wiki_link == SenseOptionType.TRANSLATION ||
+                    wiki_link == SenseOptionType.PRONUNCIATION ||
+                    wiki_link == SenseOptionType.ALTERNATIVE_FORM ||
+                    wiki_link == SenseOptionType.DESCENDANT
                 )
            )
         {
             return true;
         }
 
-        return ruthes_link.name().equals("SYM_ASSOC") && // АСЦ
+        return ruthes_link == RelationType.SYM_ASSOC && // АСЦ
                 (
-                    wiki_link.name().equals("RELATED_TERM") ||
-                    wiki_link.name().equals("COORDINATE_TERM") ||
-                    wiki_link.name().equals("INFLECTION") ||
-                    wiki_link.name().equals("QUOTATION") ||
-                    wiki_link.name().equals("QUOTATION") ||
-                    wiki_link.name().equals("ALTERNATIVE_FORM")
+                    wiki_link == SenseOptionType.RELATED_TERM ||
+                    wiki_link == SenseOptionType.COORDINATE_TERM ||
+                    wiki_link == SenseOptionType.INFLECTION ||
+                    wiki_link == SenseOptionType.QUOTATION ||
+                    wiki_link == SenseOptionType.COLLOCATION ||
+                    wiki_link == SenseOptionType.ALTERNATIVE_FORM
                 );
     }
 
