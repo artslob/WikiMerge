@@ -276,7 +276,7 @@ public class FirstRule implements Rule {
         return similarity;
     }
 
-    boolean compare_link_types(RelationType ruthes_link, SenseOptionType wiki_link) {
+    private boolean compare_link_types(RelationType ruthes_link, SenseOptionType wiki_link) {
         if (ruthes_link.name().equals("HYPONYM") && wiki_link.name().equals("HYPONYM")) // НИЖЕ
             return true;
 
@@ -314,6 +314,10 @@ public class FirstRule implements Rule {
                     wiki_link.name().equals("QUOTATION") ||
                     wiki_link.name().equals("ALTERNATIVE_FORM")
                 );
+    }
+
+    public boolean is_synonym_relation(SenseOptionType wiki_link) {
+        return wiki_link == SenseOptionType.SYNONYM;
     }
 
     private Map<String, List<WikiSense>> lemma_to_senses(Map<String, WikiSense> wiki_senses) {
