@@ -276,6 +276,46 @@ public class FirstRule implements Rule {
         return similarity;
     }
 
+    boolean compare_link_types(RelationType ruthes_link, SenseOptionType wiki_link) {
+        if (ruthes_link.name().equals("HYPONYM") && wiki_link.name().equals("HYPONYM")) // НИЖЕ
+            return true;
+
+        if (ruthes_link.name().equals("HYPERNYM") && wiki_link.name().equals("HYPERNYM")) // ВЫШЕ
+            return true;
+
+        if (ruthes_link.name().equals("HOLONYM") && wiki_link.name().equals("HOLONYM")) // ЦЕЛОЕ
+            return true;
+
+        if (ruthes_link.name().equals("MERONYM") && wiki_link.name().equals("MERONYM")) // ЧАСТЬ
+            return true;
+
+        if (ruthes_link.name().equals("DEPEND_ON") && wiki_link.name().equals("RELATED_TERM")) // АСЦ1
+            return true;
+
+        if (ruthes_link.name().equals("HAS_DEPEND") &&
+                (
+                    wiki_link.name().equals("DERIVED_TERM") ||
+                    wiki_link.name().equals("TRANSLATION") ||
+                    wiki_link.name().equals("PRONUNCIATION") ||
+                    wiki_link.name().equals("ALTERNATIVE_FORM") ||
+                    wiki_link.name().equals("DESCENDANT")
+                )
+           )
+        {
+            return true;
+        }
+
+        return ruthes_link.name().equals("SYM_ASSOC") && // АСЦ
+                (
+                    wiki_link.name().equals("RELATED_TERM") ||
+                    wiki_link.name().equals("COORDINATE_TERM") ||
+                    wiki_link.name().equals("INFLECTION") ||
+                    wiki_link.name().equals("QUOTATION") ||
+                    wiki_link.name().equals("QUOTATION") ||
+                    wiki_link.name().equals("ALTERNATIVE_FORM")
+                );
+    }
+
     private Map<String, List<WikiSense>> lemma_to_senses(Map<String, WikiSense> wiki_senses) {
         Map<String, List<WikiSense>> lemma_to_senses = new HashMap<>();
 
