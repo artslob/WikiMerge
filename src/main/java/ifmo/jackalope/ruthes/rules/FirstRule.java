@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Делается предположение о сходстве сенсов в рутезе и вики на основе
- * сходства связей сенса вики и рутеза
+ * Делается предположение о сходстве сенсов в рутезе и вики на основе сходства соседних узлов и связей к ним.
+ * Производится корректировка связей SenseOption - связь от сенса к лемме преобразуется в связь от сенса к сенсу
  */
 public class FirstRule implements Rule {
 
@@ -64,9 +64,6 @@ public class FirstRule implements Rule {
                 links_restored++;
                 System.out.println(log);
             }
-
-            // TODO: для links - попробовать найти аналогичную связь в рутезе и экспортировать связи этого узла в вики (новые для сенса, на который указывает link)
-            // TODO: для связей в concept - попробовать найти аналогичные связи в вики (построение новых)
         }
 
         for (TextEntry text_entry : ruthes.getEntries().values()) {
@@ -294,7 +291,7 @@ public class FirstRule implements Rule {
         if (ruthes_link == RelationType.DEPEND_ON && wiki_link == SenseOptionType.RELATED_TERM) // АСЦ1
             return true;
 
-        if (ruthes_link == RelationType.HAS_DEPEND &&
+        if (ruthes_link == RelationType.HAS_DEPEND && // АСЦ2
                 (
                     wiki_link == SenseOptionType.DERIVED_TERM ||
                     wiki_link == SenseOptionType.TRANSLATION ||

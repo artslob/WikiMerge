@@ -15,6 +15,8 @@ public class Rules {
 
         if (rules.isEmpty()) {
             rules.add(new FirstRule(wiki_senses, ruthes));
+            rules.add(new SecondRule());
+            // TODO: для links - попробовать найти аналогичную связь в рутезе и экспортировать связи этого узла в вики (новые для сенса, на который указывает link)
         }
 
         int total = 0;
