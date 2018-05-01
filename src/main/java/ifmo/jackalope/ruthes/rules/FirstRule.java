@@ -14,8 +14,8 @@ import java.util.Map;
  */
 public class FirstRule extends AbstractRule {
 
-    FirstRule(final Map<String, WikiSense> wiki_senses, final RuthesSnapshot ruthes) {
-        super(wiki_senses, ruthes);
+    FirstRule(final Map<String, WikiSense> wiki_senses, final RuthesSnapshot ruthes, final Map<String, List<WikiSense>> lemma_to_sense) {
+        super(wiki_senses, ruthes, lemma_to_sense);
     }
 
     @Override

@@ -5,8 +5,6 @@ import com.tuneit.jackalope.dict.wiki.engine.core.SenseOptionType;
 import com.tuneit.jackalope.dict.wiki.engine.core.WikiSense;
 import ifmo.jackalope.ruthes.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +13,10 @@ public abstract class AbstractRule implements Rule {
     final Map<String, List<WikiSense>> lemma_to_sense;
     final RuthesSnapshot ruthes;
 
-    AbstractRule(final Map<String, WikiSense> wiki_senses, final RuthesSnapshot ruthes) {
+    AbstractRule(final Map<String, WikiSense> wiki_senses, final RuthesSnapshot ruthes, final Map<String, List<WikiSense>> lemma_to_sense) {
         this.wiki_senses = wiki_senses;
-        this.lemma_to_sense = lemma_to_senses(wiki_senses);
         this.ruthes = ruthes;
+        this.lemma_to_sense = lemma_to_sense;
     }
 
     WikiSense find_most_similar_sense_for_option(List<WikiSense> senses, TextEntry text_entry, SenseOptionType option_type) {
@@ -233,42 +231,6 @@ public abstract class AbstractRule implements Rule {
 
     private boolean is_synonym_relation(SenseOptionType wiki_link) {
         return wiki_link == SenseOptionType.SYNONYM;
-    }
-
-    private Map<String, List<WikiSense>> lemma_to_senses(Map<String, WikiSense> wiki_senses) {
-        Map<String, List<WikiSense>> lemma_to_senses = new HashMap<>();
-
-        for (WikiSense sense : wiki_senses.values()) {
-            String lemma = sense.getLemma();
-            if (lemma_to_senses.containsKey(lemma)) {
-                lemma_to_senses.get(lemma).add(sense);
-            }
-            else {
-                List<WikiSense> senses = new ArrayList<>();
-                senses.add(sense);
-                lemma_to_senses.put(lemma, senses);
-            }
-        }
-
-        return lemma_to_senses;
-    }
-
-    private Map<String, WikiSense> lemmas_with_one_sense(Map<String, WikiSense> wiki_senses) {
-        Map<String, List<WikiSense>> lemma_to_senses = lemma_to_senses(wiki_senses);
-
-        Map<String, WikiSense> lemma_to_sense = new HashMap<>();
-
-        for (Map.Entry<String, List<WikiSense>> entry : lemma_to_senses.entrySet()) {
-            String lemma = entry.getKey();
-            List<WikiSense> senses = entry.getValue();
-
-            if (senses.size() == 1) {
-                lemma_to_sense.put(lemma, senses.get(0));
-                lemma_to_senses.remove(lemma);
-            }
-        }
-
-        return lemma_to_sense;
     }
 
     @Override
