@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractRule implements Rule {
-    private final Map<String, WikiSense> wiki_senses;
+    final Map<String, WikiSense> wiki_senses;
     final Map<String, List<WikiSense>> lemma_to_sense;
     final RuthesSnapshot ruthes;
 
@@ -189,7 +189,7 @@ public abstract class AbstractRule implements Rule {
         return similarity;
     }
 
-    private boolean compare_link_types(RelationType ruthes_link, SenseOptionType wiki_link) {
+    boolean compare_link_types(RelationType ruthes_link, SenseOptionType wiki_link) {
         if (ruthes_link == RelationType.HYPONYM && wiki_link == SenseOptionType.HYPONYM) // НИЖЕ
             return true;
 
@@ -208,12 +208,12 @@ public abstract class AbstractRule implements Rule {
         if (ruthes_link == RelationType.HAS_DEPEND && // АСЦ2
                 (
                         wiki_link == SenseOptionType.DERIVED_TERM ||
-                                wiki_link == SenseOptionType.TRANSLATION ||
-                                wiki_link == SenseOptionType.PRONUNCIATION ||
-                                wiki_link == SenseOptionType.ALTERNATIVE_FORM ||
-                                wiki_link == SenseOptionType.DESCENDANT
+                        wiki_link == SenseOptionType.TRANSLATION ||
+                        wiki_link == SenseOptionType.PRONUNCIATION ||
+                        wiki_link == SenseOptionType.ALTERNATIVE_FORM ||
+                        wiki_link == SenseOptionType.DESCENDANT
                 )
-                )
+           )
         {
             return true;
         }
@@ -221,15 +221,15 @@ public abstract class AbstractRule implements Rule {
         return ruthes_link == RelationType.SYM_ASSOC && // АСЦ
                 (
                         wiki_link == SenseOptionType.RELATED_TERM ||
-                                wiki_link == SenseOptionType.COORDINATE_TERM ||
-                                wiki_link == SenseOptionType.INFLECTION ||
-                                wiki_link == SenseOptionType.QUOTATION ||
-                                wiki_link == SenseOptionType.COLLOCATION ||
-                                wiki_link == SenseOptionType.ALTERNATIVE_FORM
+                        wiki_link == SenseOptionType.COORDINATE_TERM ||
+                        wiki_link == SenseOptionType.INFLECTION ||
+                        wiki_link == SenseOptionType.QUOTATION ||
+                        wiki_link == SenseOptionType.COLLOCATION ||
+                        wiki_link == SenseOptionType.ALTERNATIVE_FORM
                 );
     }
 
-    private boolean is_synonym_relation(SenseOptionType wiki_link) {
+    boolean is_synonym_relation(SenseOptionType wiki_link) {
         return wiki_link == SenseOptionType.SYNONYM;
     }
 
