@@ -17,7 +17,7 @@ public class Rules {
 
         if (rules.isEmpty()) {
             rules.add(new FirstRule(wiki_senses, ruthes, lemma_to_sense));
-            rules.add(new SecondRule());
+            rules.add(new SecondRule(wiki_senses, ruthes, lemma_to_sense));
             // TODO: для links - попробовать найти аналогичную связь в рутезе и экспортировать связи этого узла в вики (новые для сенса, на который указывает link)
         }
 

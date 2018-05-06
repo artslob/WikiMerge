@@ -119,6 +119,8 @@ public class SecondRule extends AbstractRule {
             SenseOptionType option_type = option.getType();
 
             List<WikiSense> possible_senses = lemma_to_sense.get(lemma);
+            if (possible_senses == null || possible_senses.size() < 1)
+                continue;
 
             if (possible_senses.contains(target_sense) && compare_link_types(relation_type, option_type))
                 return true;
@@ -141,6 +143,8 @@ public class SecondRule extends AbstractRule {
             SenseOptionType option_type = option.getType();
 
             List<WikiSense> possible_senses = lemma_to_sense.get(lemma);
+            if (possible_senses == null || possible_senses.size() < 1)
+                continue;
 
             if (possible_senses.contains(target_sense) && is_synonym_relation(option_type))
                 return true;
