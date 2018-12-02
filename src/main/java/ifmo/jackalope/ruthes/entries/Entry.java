@@ -1,8 +1,8 @@
 package ifmo.jackalope.ruthes.entries;
 
 abstract class Entry {
-    final String id;
-    final String name;
+    private final String id;
+    private final String name;
 
     Entry(String id, String name) {
         if (id == null || name == null)
