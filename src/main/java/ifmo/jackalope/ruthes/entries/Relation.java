@@ -1,28 +1,20 @@
 package ifmo.jackalope.ruthes.entries;
 
 public class Relation {
-    private Concept concept;
-    private RelationType relationType;
-
-    public Concept getConcept() {
-        return concept;
-    }
+    private final Concept concept;
+    private final RelationType relationType;
 
     public Relation(Concept concept, RelationType relationType) {
         this.concept = concept;
         this.relationType = relationType;
     }
 
-    public void setConcept(Concept concept) {
-        this.concept = concept;
+    public Concept getConcept() {
+        return concept;
     }
 
     public RelationType getRelationType() {
         return relationType;
-    }
-
-    public void setRelationType(RelationType relationType) {
-        this.relationType = relationType;
     }
 
     @Override
