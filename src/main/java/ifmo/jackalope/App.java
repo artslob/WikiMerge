@@ -23,12 +23,6 @@ public class App {
         RuthesSnapshotManager ruthesManager = new RuthesSnapshotManager(args[1]);
         RuthesSnapshot ruthes_snapshot = ruthesManager.getSnapshot();
 
-//        for (WikiSense s : wiki_senses.values()){
-//            if (s.getLinks().size() > 0) {
-//                System.out.println(s);
-//            }
-//        }
-
         int result = Rules.apply(wiki_senses, ruthes_snapshot);
         System.out.println(result + " links were restored.");
         System.out.println("Program done.");
