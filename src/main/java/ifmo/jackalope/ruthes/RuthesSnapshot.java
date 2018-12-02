@@ -4,6 +4,7 @@ import ifmo.jackalope.ruthes.entries.Concept;
 import ifmo.jackalope.ruthes.entries.Relation;
 import ifmo.jackalope.ruthes.entries.RelationType;
 import ifmo.jackalope.ruthes.entries.TextEntry;
+import ifmo.jackalope.ruthes.utils.StaxEventProcessor;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;

@@ -1,5 +1,6 @@
-package ifmo.jackalope.ruthes;
+package ifmo.jackalope.ruthes.utils;
 
+import ifmo.jackalope.ruthes.RuthesSnapshot;
 import ifmo.jackalope.ruthes.entries.Concept;
 import ifmo.jackalope.ruthes.entries.Relation;
 import ifmo.jackalope.ruthes.entries.TextEntry;

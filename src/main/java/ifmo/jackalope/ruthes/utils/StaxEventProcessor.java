@@ -1,4 +1,4 @@
-package ifmo.jackalope.ruthes;
+package ifmo.jackalope.ruthes.utils;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -10,7 +10,7 @@ public class StaxEventProcessor implements AutoCloseable {
 
     private final XMLEventReader reader;
 
-    StaxEventProcessor(InputStream is) throws XMLStreamException {
+    public StaxEventProcessor(InputStream is) throws XMLStreamException {
         reader = FACTORY.createXMLEventReader(is);
     }
 
