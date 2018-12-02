@@ -39,15 +39,15 @@ public class TextEntry extends Entry {
             this.lemma = lemma;
         }
 
-        public void setMain_word(String main_word) {
+        public void setMainWord(String main_word) {
             this.main_word = main_word;
         }
 
-        public void setSynt_type(String synt_type) {
+        public void setSyntType(String synt_type) {
             this.synt_type = synt_type;
         }
 
-        public void setPos_string(String pos_string) {
+        public void setPosString(String pos_string) {
             this.pos_string = pos_string;
         }
 
@@ -60,15 +60,15 @@ public class TextEntry extends Entry {
         return lemma;
     }
 
-    public String getMain_word() {
+    public String getMainWord() {
         return main_word;
     }
 
-    public String getSynt_type() {
+    public String getSyntType() {
         return synt_type;
     }
 
-    public String getPos_string() {
+    public String getPosString() {
         return pos_string;
     }
 

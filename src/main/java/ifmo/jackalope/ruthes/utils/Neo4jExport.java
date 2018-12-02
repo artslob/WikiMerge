@@ -58,7 +58,7 @@ public class Neo4jExport implements AutoCloseable {
     private void export_entry(Session session, TextEntry entry) {
         session.writeTransaction(tx -> tx.run(
                 "CREATE (n: TextEntry {id: $id, name: $name, main_word: $main_word})",
-                parameters("id", entry.getId(), "name", entry.getName(), "main_word", entry.getMain_word())
+                parameters("id", entry.getId(), "name", entry.getName(), "main_word", entry.getMainWord())
         ));
     }
 

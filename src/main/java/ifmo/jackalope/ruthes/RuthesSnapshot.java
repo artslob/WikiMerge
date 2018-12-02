@@ -124,19 +124,19 @@ public class RuthesSnapshot {
                         case "main_word":
                             xmlEvent = reader.nextEvent();
                             if (!(xmlEvent instanceof EndElement) && text_entry_builder != null) {
-                                text_entry_builder.setMain_word(xmlEvent.asCharacters().getData().toLowerCase());
+                                text_entry_builder.setMainWord(xmlEvent.asCharacters().getData().toLowerCase());
                             }
                             break;
                         case "synt_type":
                             xmlEvent = reader.nextEvent();
                             if (!(xmlEvent instanceof EndElement) && text_entry_builder != null) {
-                                text_entry_builder.setSynt_type(xmlEvent.asCharacters().getData());
+                                text_entry_builder.setSyntType(xmlEvent.asCharacters().getData());
                             }
                             break;
                         case "pos_string":
                             xmlEvent = reader.nextEvent();
                             if (!(xmlEvent instanceof EndElement) && text_entry_builder != null) {
-                                text_entry_builder.setPos_string(xmlEvent.asCharacters().getData());
+                                text_entry_builder.setPosString(xmlEvent.asCharacters().getData());
                             }
                             break;
                         default:
