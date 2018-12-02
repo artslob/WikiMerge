@@ -3,9 +3,7 @@ package ifmo.jackalope.ruthes.entries;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextEntry {
-    private String id;
-    private String name;
+public class TextEntry extends Entry {
     private String lemma;
     private String main_word;
     private String synt_type;
@@ -13,16 +11,8 @@ public class TextEntry {
     /* hold concepts id */
     private List<Concept> synonyms = new ArrayList<>();
 
-    public String getId() {
-        return id;
-    }
-
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setName(String name) {
