@@ -76,7 +76,8 @@ public class TextEntry extends Entry {
         return synonyms;
     }
 
+    @Override
     public String toString() {
-        return String.format("%s %s", this.id, this.name);
+        return String.format("Text Entry - %s", super.toString());
     }
 }

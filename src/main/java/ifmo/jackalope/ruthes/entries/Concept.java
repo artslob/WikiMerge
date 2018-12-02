@@ -60,7 +60,8 @@ public class Concept extends Entry {
         return synonyms;
     }
 
+    @Override
     public String toString() {
-        return String.format("%s %s", this.id, this.name);
+        return String.format("Concept - %s", super.toString());
     }
 }
