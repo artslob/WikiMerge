@@ -95,7 +95,7 @@ public class RuthesSnapshot {
 
         try (StaxEventProcessor processor = new StaxEventProcessor(Files.newInputStream(path))) {
             XMLEventReader reader = processor.getReader();
-            TextEntry current_entry = null;
+            TextEntry.Builder text_entry_builder = null;
 
             while (reader.hasNext()) {
                 XMLEvent xmlEvent = reader.nextEvent();
@@ -103,40 +103,40 @@ public class RuthesSnapshot {
                     StartElement startElement = xmlEvent.asStartElement();
                     switch (startElement.getName().getLocalPart()) {
                         case "entry":
-                            current_entry = new TextEntry();
+                            text_entry_builder = new TextEntry.Builder();
                             Attribute id_attr = startElement.getAttributeByName(new QName("id"));
                             if (id_attr != null) {
-                                current_entry.setId(id_attr.getValue());
+                                text_entry_builder.setId(id_attr.getValue());
                             }
                             break;
                         case "name":
                             xmlEvent = reader.nextEvent();
-                            if (current_entry != null) {
-                                current_entry.setName(xmlEvent.asCharacters().getData().toLowerCase());
+                            if (text_entry_builder != null) {
+                                text_entry_builder.setName(xmlEvent.asCharacters().getData().toLowerCase());
                             }
                             break;
                         case "lemma":
                             xmlEvent = reader.nextEvent();
-                            if (!(xmlEvent instanceof EndElement) && current_entry != null) {
-                                current_entry.setLemma(xmlEvent.asCharacters().getData().toLowerCase());
+                            if (!(xmlEvent instanceof EndElement) && text_entry_builder != null) {
+                                text_entry_builder.setLemma(xmlEvent.asCharacters().getData().toLowerCase());
                             }
                             break;
                         case "main_word":
                             xmlEvent = reader.nextEvent();
-                            if (!(xmlEvent instanceof EndElement) && current_entry != null) {
-                                current_entry.setMain_word(xmlEvent.asCharacters().getData().toLowerCase());
+                            if (!(xmlEvent instanceof EndElement) && text_entry_builder != null) {
+                                text_entry_builder.setMain_word(xmlEvent.asCharacters().getData().toLowerCase());
                             }
                             break;
                         case "synt_type":
                             xmlEvent = reader.nextEvent();
-                            if (!(xmlEvent instanceof EndElement) && current_entry != null) {
-                                current_entry.setSynt_type(xmlEvent.asCharacters().getData());
+                            if (!(xmlEvent instanceof EndElement) && text_entry_builder != null) {
+                                text_entry_builder.setSynt_type(xmlEvent.asCharacters().getData());
                             }
                             break;
                         case "pos_string":
                             xmlEvent = reader.nextEvent();
-                            if (!(xmlEvent instanceof EndElement) && current_entry != null) {
-                                current_entry.setPos_string(xmlEvent.asCharacters().getData());
+                            if (!(xmlEvent instanceof EndElement) && text_entry_builder != null) {
+                                text_entry_builder.setPos_string(xmlEvent.asCharacters().getData());
                             }
                             break;
                         default:
@@ -149,8 +149,10 @@ public class RuthesSnapshot {
                 if (xmlEvent.isEndElement()) {
                     EndElement endElement = xmlEvent.asEndElement();
                     if (endElement.getName().getLocalPart().equals("entry")) {
-                        if (current_entry != null) {
-                            entries.put(current_entry.getId(), current_entry);
+                        if (text_entry_builder != null) {
+                            TextEntry text_entry_result = text_entry_builder.build();
+                            entries.put(text_entry_result.getId(), text_entry_result);
+                            text_entry_builder = null;
                         }
                     }
                 }
@@ -192,7 +194,7 @@ public class RuthesSnapshot {
 
         try (StaxEventProcessor processor = new StaxEventProcessor(Files.newInputStream(path))) {
             XMLEventReader reader = processor.getReader();
-            Concept current_concept = null;
+            Concept.Builder concept_builder = null;
 
             while (reader.hasNext()) {
                 XMLEvent xmlEvent = reader.nextEvent();
@@ -200,28 +202,28 @@ public class RuthesSnapshot {
                     StartElement startElement = xmlEvent.asStartElement();
                     switch (startElement.getName().getLocalPart()) {
                         case "concept":
-                            current_concept = new Concept();
+                            concept_builder = new Concept.Builder();
                             Attribute id_attr = startElement.getAttributeByName(new QName("id"));
                             if (id_attr != null) {
-                                current_concept.setId(id_attr.getValue());
+                                concept_builder.setId(id_attr.getValue());
                             }
                             break;
                         case "name":
                             xmlEvent = reader.nextEvent();
-                            if (current_concept != null) {
-                                current_concept.setName(xmlEvent.asCharacters().getData().toLowerCase());
+                            if (concept_builder != null) {
+                                concept_builder.setName(xmlEvent.asCharacters().getData().toLowerCase());
                             }
                             break;
                         case "gloss":
                             xmlEvent = reader.nextEvent();
-                            if (!(xmlEvent instanceof EndElement) && current_concept != null) {
-                                current_concept.setGloss(xmlEvent.asCharacters().getData().toLowerCase());
+                            if (!(xmlEvent instanceof EndElement) && concept_builder != null) {
+                                concept_builder.setGloss(xmlEvent.asCharacters().getData().toLowerCase());
                             }
                             break;
                         case "domain":
                             xmlEvent = reader.nextEvent();
-                            if (current_concept != null) {
-                                current_concept.setDomain(xmlEvent.asCharacters().getData());
+                            if (concept_builder != null) {
+                                concept_builder.setDomain(xmlEvent.asCharacters().getData());
                             }
                             break;
                         default:
@@ -234,8 +236,10 @@ public class RuthesSnapshot {
                 if (xmlEvent.isEndElement()) {
                     EndElement endElement = xmlEvent.asEndElement();
                     if (endElement.getName().getLocalPart().equals("concept")) {
-                        if (current_concept != null) {
-                            concepts.put(current_concept.getId(), current_concept);
+                        if (concept_builder != null) {
+                            Concept result_concept = concept_builder.build();
+                            concepts.put(result_concept.getId(), result_concept);
+                            concept_builder = null;
                         }
                     }
                 }
