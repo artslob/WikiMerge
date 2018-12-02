@@ -1,5 +1,8 @@
 package ifmo.jackalope.ruthes;
 
+import ifmo.jackalope.ruthes.entries.Concept;
+import ifmo.jackalope.ruthes.entries.Relation;
+import ifmo.jackalope.ruthes.entries.TextEntry;
 import org.apache.commons.lang3.time.StopWatch;
 import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Driver;

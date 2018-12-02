@@ -1,4 +1,4 @@
-package ifmo.jackalope.ruthes;
+package ifmo.jackalope.ruthes.entries;
 
 public class Relation {
     private Concept concept;
@@ -8,7 +8,7 @@ public class Relation {
         return concept;
     }
 
-    Relation(Concept concept, RelationType relationType) {
+    public Relation(Concept concept, RelationType relationType) {
         this.concept = concept;
         this.relationType = relationType;
     }

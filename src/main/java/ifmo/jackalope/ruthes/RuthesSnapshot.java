@@ -1,5 +1,10 @@
 package ifmo.jackalope.ruthes;
 
+import ifmo.jackalope.ruthes.entries.Concept;
+import ifmo.jackalope.ruthes.entries.Relation;
+import ifmo.jackalope.ruthes.entries.RelationType;
+import ifmo.jackalope.ruthes.entries.TextEntry;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;

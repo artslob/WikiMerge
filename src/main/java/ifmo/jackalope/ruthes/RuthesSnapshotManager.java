@@ -1,8 +1,10 @@
 package ifmo.jackalope.ruthes;
 
-import java.util.ArrayList;
+import ifmo.jackalope.ruthes.entries.Concept;
+import ifmo.jackalope.ruthes.entries.Relation;
+import ifmo.jackalope.ruthes.entries.TextEntry;
+
 import java.util.List;
-import java.util.Map;
 
 public class RuthesSnapshotManager {
     private RuthesSnapshot snapshot;

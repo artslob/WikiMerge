@@ -4,6 +4,8 @@ import com.tuneit.jackalope.dict.wiki.engine.core.SenseOption;
 import com.tuneit.jackalope.dict.wiki.engine.core.SenseOptionType;
 import com.tuneit.jackalope.dict.wiki.engine.core.WikiSense;
 import ifmo.jackalope.ruthes.*;
+import ifmo.jackalope.ruthes.entries.Concept;
+import ifmo.jackalope.ruthes.entries.TextEntry;
 
 import java.util.List;
 import java.util.Map;

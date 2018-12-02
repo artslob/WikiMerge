@@ -1,4 +1,4 @@
-package ifmo.jackalope.ruthes;
+package ifmo.jackalope.ruthes.entries;
 
 public enum RelationType {
     HYPONYM("НИЖЕ") {
@@ -40,7 +40,7 @@ public enum RelationType {
     /* симметричная ассоциация */
     SYM_ASSOC("АСЦ");
 
-    String name;
+    public String name;
 
     RelationType(String name) {
         this.name = name;

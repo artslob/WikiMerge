@@ -1,4 +1,4 @@
-package ifmo.jackalope.ruthes;
+package ifmo.jackalope.ruthes.entries;
 
 import java.util.ArrayList;
 import java.util.List;
