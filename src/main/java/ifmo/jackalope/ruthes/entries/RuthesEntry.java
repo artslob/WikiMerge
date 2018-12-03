@@ -1,6 +1,6 @@
 package ifmo.jackalope.ruthes.entries;
 
-abstract class RuthesEntry {
+abstract class RuthesEntry implements Entry {
     private final String id;
     private final String name;
 
@@ -11,10 +11,12 @@ abstract class RuthesEntry {
         this.name = name;
     }
 
+    @Override
     public String getId() {
         return this.id;
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
