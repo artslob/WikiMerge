@@ -3,7 +3,7 @@ package ifmo.jackalope.ruthes.entries;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Concept extends Entry {
+public class Concept extends RuthesEntry {
     private final String gloss;
     private final String domain;
     /* this -> from; rel.concept -> to; rel.type -> type */

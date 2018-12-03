@@ -3,7 +3,7 @@ package ifmo.jackalope.ruthes.entries;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextEntry extends Entry {
+public class TextEntry extends RuthesEntry {
     private final String lemma;
     private final String main_word;
     private final String synt_type;

@@ -1,10 +1,10 @@
 package ifmo.jackalope.ruthes.entries;
 
-abstract class Entry {
+abstract class RuthesEntry {
     private final String id;
     private final String name;
 
-    Entry(String id, String name) {
+    RuthesEntry(String id, String name) {
         if (id == null || name == null)
             throw new IllegalStateException("Id or name of entry is null.");
         this.id = id;
