@@ -38,7 +38,8 @@ public enum RelationType {
         }
     },
     /* симметричная ассоциация */
-    SYM_ASSOC("АСЦ");
+    SYM_ASSOC("АСЦ"),
+    SYNONYM("SYNONYM");
 
     public String name;
 
