@@ -28,7 +28,7 @@ public class RuthesSnapshot {
     /* map.key -> concept.id; map.value -> [entries.ids] */
     private Map<String, List<String>> synonyms = new HashMap<>();
 
-    public RuthesSnapshot(String dir_contain_xml) {
+    RuthesSnapshot(String dir_contain_xml) {
         try {
             conceptsLoad(dir_contain_xml);
             entriesLoad(dir_contain_xml);
