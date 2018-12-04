@@ -41,10 +41,10 @@ public enum RelationType {
     SYM_ASSOC("АСЦ"),
     SYNONYM("SYNONYM");
 
-    public String name;
+    public String typeName;
 
-    RelationType(String name) {
-        this.name = name;
+    RelationType(String typeName) {
+        this.typeName = typeName;
     }
 
     public RelationType getConverseRelation() {
@@ -53,7 +53,7 @@ public enum RelationType {
 
     public static RelationType fromString(String name) {
         for (RelationType rt : RelationType.values()) {
-            if (rt.name.equalsIgnoreCase(name)) {
+            if (rt.typeName.equalsIgnoreCase(name)) {
                 return rt;
             }
         }
@@ -62,6 +62,6 @@ public enum RelationType {
 
     @Override
     public String toString() {
-        return String.format("%s %s", this.name(), this.name);
+        return String.format("%s %s", this.name(), this.typeName);
     }
 }

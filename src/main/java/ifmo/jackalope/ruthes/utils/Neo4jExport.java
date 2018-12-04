@@ -67,7 +67,7 @@ public class Neo4jExport implements AutoCloseable {
             session.writeTransaction(tx -> tx.run(
                     "MATCH (f: Concept {id: $from_id})\n" +
                     "MATCH (t: Concept {id: $to_id})" +
-                    "CREATE (f)-[:" + relation.getRelationType().name +"]->(t)",
+                    "CREATE (f)-[:" + relation.getRelationType().typeName +"]->(t)",
                     parameters("from_id", concept.getId(), "to_id", relation.getConcept().getId())
             ));
         }
