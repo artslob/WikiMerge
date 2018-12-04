@@ -1,15 +1,8 @@
 package ifmo.jackalope.ruthes.entries;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Concept extends RuthesEntry {
     private final String gloss;
     private final String domain;
-    /* this -> from; rel.concept -> to; rel.type -> type */
-    private final List<Relation> relations = new ArrayList<>();
-    /* hold entries */
-    private final List<TextEntry> synonyms = new ArrayList<>();
 
     private Concept(Builder builder) {
         super(builder.id, builder.name);
@@ -50,14 +43,6 @@ public class Concept extends RuthesEntry {
 
     public String getDomain() {
         return domain;
-    }
-
-    public List<Relation> getRelations() {
-        return relations;
-    }
-
-    public List<TextEntry> getSynonyms() {
-        return synonyms;
     }
 
     @Override

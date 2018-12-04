@@ -1,9 +1,6 @@
 package ifmo.jackalope.ruthes;
 
-import ifmo.jackalope.ruthes.entries.Concept;
-import ifmo.jackalope.ruthes.entries.Relation;
-import ifmo.jackalope.ruthes.entries.RelationType;
-import ifmo.jackalope.ruthes.entries.TextEntry;
+import ifmo.jackalope.ruthes.entries.*;
 import ifmo.jackalope.ruthes.utils.StaxEventProcessor;
 
 import javax.xml.namespace.QName;
@@ -23,15 +20,14 @@ import java.util.List;
 import java.util.Map;
 
 public class RuthesSnapshot {
-    private Map<String, Concept> concepts = new HashMap<>();
-    private Map<String, TextEntry> entries = new HashMap<>();
+    private final Map<String, Entry> entries = new HashMap<>();
     /* map.key -> concept.id; map.value -> [entries.ids] */
-    private Map<String, List<String>> synonyms = new HashMap<>();
+    private final Map<String, List<String>> synonyms = new HashMap<>();
 
     RuthesSnapshot(String dir_contain_xml) {
         try {
             conceptsLoad(dir_contain_xml);
-            entriesLoad(dir_contain_xml);
+            textEntriesLoad(dir_contain_xml);
             relationsLoad(dir_contain_xml);
             synonymsLoad(dir_contain_xml);
         } catch (IOException | XMLStreamException e) {
@@ -39,11 +35,7 @@ public class RuthesSnapshot {
         }
     }
 
-    public Map<String, Concept> getConcepts() {
-        return concepts;
-    }
-
-    public Map<String, TextEntry> getEntries() {
+    public Map<String, Entry> getEntries() {
         return entries;
     }
 
@@ -63,23 +55,25 @@ public class RuthesSnapshot {
                     StartElement startElement = xmlEvent.asStartElement();
                     if (startElement.getName().getLocalPart().equals("entry_rel")) {
                         Attribute concept_id_attr = startElement.getAttributeByName(new QName("concept_id"));
-                        Attribute entry_id_attr = startElement.getAttributeByName(new QName("entry_id"));
+                        Attribute text_entry_id_attr = startElement.getAttributeByName(new QName("entry_id"));
 
                         String concept_id = concept_id_attr.getValue();
-                        String entry_id = entry_id_attr.getValue();
+                        String text_entry_id = text_entry_id_attr.getValue();
 
                         List<String> entries = synonyms.get(concept_id);
                         if (entries == null) {
                             entries = new ArrayList<>();
-                            entries.add(entry_id);
+                            entries.add(text_entry_id);
                             synonyms.put(concept_id, entries);
-                        }
-                        else {
-                            entries.add(entry_id);
+                        } else {
+                            entries.add(text_entry_id);
                         }
 
-                        this.concepts.get(concept_id).getSynonyms().add(this.entries.get(entry_id));
-                        this.entries.get(entry_id).getSynonyms().add(this.concepts.get(concept_id));
+                        Entry concept = this.entries.get(concept_id);
+                        Entry text_entry = this.entries.get(text_entry_id);
+
+                        concept.getRelations().add(new Relation(text_entry, RelationType.SYNONYM));
+                        text_entry.getRelations().add(new Relation(concept, RelationType.SYNONYM));
                     }
                     else if (!startElement.getName().getLocalPart().equals("synonyms")) {
                         throw new IllegalStateException("Unknown start element " +
@@ -90,7 +84,7 @@ public class RuthesSnapshot {
         }
     }
 
-    private void entriesLoad(String dir_contain_xml) throws IOException, XMLStreamException {
+    private void textEntriesLoad(String dir_contain_xml) throws IOException, XMLStreamException {
         Path path = Paths.get(dir_contain_xml, "text_entry.xml");
 
         try (StaxEventProcessor processor = new StaxEventProcessor(Files.newInputStream(path))) {
@@ -175,12 +169,11 @@ public class RuthesSnapshot {
                         Attribute to = startElement.getAttributeByName(new QName("to"));
                         Attribute name = startElement.getAttributeByName(new QName("name"));
 //                        Attribute asp = startElement.getAttributeByName(new QName("asp"));
-                        Concept from_concept = concepts.get(from.getValue());
-                        Concept to_concept = concepts.get(to.getValue());
+                        Entry from_concept = entries.get(from.getValue());
+                        Entry to_concept = entries.get(to.getValue());
                         Relation relation = new Relation(to_concept, RelationType.fromString(name.getValue()));
                         from_concept.getRelations().add(relation);
-                    }
-                    else if (!startElement.getName().getLocalPart().equals("relations")) {
+                    } else if (!startElement.getName().getLocalPart().equals("relations")) {
                         throw new IllegalStateException("Unknown start element " +
                                 startElement.getName().getLocalPart());
                     }
@@ -238,7 +231,7 @@ public class RuthesSnapshot {
                     if (endElement.getName().getLocalPart().equals("concept")) {
                         if (concept_builder != null) {
                             Concept result_concept = concept_builder.build();
-                            concepts.put(result_concept.getId(), result_concept);
+                            entries.put(result_concept.getId(), result_concept);
                             concept_builder = null;
                         }
                     }

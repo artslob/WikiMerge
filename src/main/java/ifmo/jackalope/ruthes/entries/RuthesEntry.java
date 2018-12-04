@@ -1,8 +1,15 @@
 package ifmo.jackalope.ruthes.entries;
 
+import java.util.ArrayList;
+import java.util.List;
+
 abstract class RuthesEntry implements Entry {
     private final String id;
     private final String name;
+    /**
+     * from = this -> relation.type -> to = relation.entry
+     */
+    private final List<Relation> relations = new ArrayList<>();
 
     RuthesEntry(String id, String name) {
         if (id == null || name == null)
@@ -19,6 +26,11 @@ abstract class RuthesEntry implements Entry {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public List<Relation> getRelations() {
+        return this.relations;
     }
 
     @Override

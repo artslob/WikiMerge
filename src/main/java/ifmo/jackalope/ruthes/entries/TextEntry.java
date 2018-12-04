@@ -1,15 +1,10 @@
 package ifmo.jackalope.ruthes.entries;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class TextEntry extends RuthesEntry {
     private final String lemma;
     private final String main_word;
     private final String synt_type;
     private final String pos_string;
-    /* hold concepts id */
-    private final List<Concept> synonyms = new ArrayList<>();
 
     private TextEntry(Builder builder) {
         super(builder.id, builder.name);
@@ -70,10 +65,6 @@ public class TextEntry extends RuthesEntry {
 
     public String getPosString() {
         return pos_string;
-    }
-
-    public List<Concept> getSynonyms() {
-        return synonyms;
     }
 
     @Override

@@ -16,19 +16,19 @@ public class Relation {
     /**
      * Понятие, к которому направлено отношение.
      */
-    private final Concept concept;
+    private final Entry entry;
     /**
      * Тип отношения.
      */
     private final RelationType relationType;
 
-    public Relation(Concept concept, RelationType relationType) {
-        this.concept = concept;
+    public Relation(Entry entry, RelationType relationType) {
+        this.entry = entry;
         this.relationType = relationType;
     }
 
-    public Concept getConcept() {
-        return concept;
+    public Entry getEntry() {
+        return entry;
     }
 
     public RelationType getType() {
@@ -37,6 +37,6 @@ public class Relation {
 
     @Override
     public String toString() {
-        return concept.toString() + " — " + relationType.toString();
+        return entry.toString() + " — " + relationType.toString();
     }
 }
