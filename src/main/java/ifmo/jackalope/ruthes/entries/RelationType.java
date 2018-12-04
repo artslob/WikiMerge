@@ -41,10 +41,14 @@ public enum RelationType {
     SYM_ASSOC("АСЦ"),
     SYNONYM("SYNONYM");
 
-    public String typeName;
+    private final String typeName;
 
     RelationType(String typeName) {
         this.typeName = typeName;
+    }
+
+    public String getTypeName() {
+        return this.typeName;
     }
 
     public RelationType getConverseRelation() {
