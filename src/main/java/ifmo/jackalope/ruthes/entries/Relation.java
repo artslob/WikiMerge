@@ -31,7 +31,7 @@ public class Relation {
         return concept;
     }
 
-    public RelationType getRelationType() {
+    public RelationType getType() {
         return relationType;
     }
 

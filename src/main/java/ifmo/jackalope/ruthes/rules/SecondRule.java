@@ -36,7 +36,7 @@ public class SecondRule extends AbstractRule {
 
             for (Relation relation : concept.getRelations()) {
                 Concept adj_concept = relation.getConcept();
-                RelationType adj_relation_type = relation.getRelationType();
+                RelationType adj_relation_type = relation.getType();
 
                 List<WikiSense> target_senses = lemma_to_sense.get(adj_concept.getName().toLowerCase());
                 if (target_senses == null || target_senses.size() < 1)

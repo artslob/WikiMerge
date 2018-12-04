@@ -70,7 +70,7 @@ public abstract class AbstractRule implements Rule {
         else {
             for (Relation relation : concept.getRelations()) {
                 Concept adj_concept = relation.getConcept();
-                RelationType adj_relation_type = relation.getRelationType();
+                RelationType adj_relation_type = relation.getType();
 
                 if (!compare_link_types(adj_relation_type, option_type))
                     continue;
@@ -153,7 +153,7 @@ public abstract class AbstractRule implements Rule {
 
         for (Relation relation : concept.getRelations()) {
             Concept target_concept = relation.getConcept();
-            RelationType relation_type = relation.getRelationType();
+            RelationType relation_type = relation.getType();
 
             for (SenseOption option : sense.getAllOptions()) {
                 String option_target_lemma = option.getOption().toString();
