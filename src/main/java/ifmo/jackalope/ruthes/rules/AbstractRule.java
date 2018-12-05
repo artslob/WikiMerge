@@ -16,6 +16,11 @@ public abstract class AbstractRule implements Rule {
     final Map<String, List<WikiSense>> lemma_to_senses;
     final RuthesSnapshot ruthes;
 
+    /**
+     * @param wiki_senses     соответствие ключа сенса к сенсу
+     * @param ruthes          снапшот рутеза
+     * @param lemma_to_senses соответствие между именем леммы и списком её сенсов
+     */
     AbstractRule(final Map<String, WikiSense> wiki_senses,
                  final RuthesSnapshot ruthes,
                  final Map<String, List<WikiSense>> lemma_to_senses) {
@@ -24,6 +29,16 @@ public abstract class AbstractRule implements Rule {
         this.lemma_to_senses = lemma_to_senses;
     }
 
+    /**
+     * Данный метод находит сенс из списка сенсов, к которому с наибольшей вероятностью направлена связь типа
+     * option_type. Связь идёт от некоторого сенса в вики, с которым мы нашли соответсвие в виде понятия entry из
+     * ruthes. Мы можем предполагать, что соседний к entry узел имеет эквивалент в списке сенсов, поэтому можем найти
+     * его, сравнив связи соседа entry и сенса из списка соответственно.
+     *
+     * @param senses      список сенсов в вики, к которым идёт связь
+     * @param option_type вид данной связи
+     * @param entry       понятие из рутеза, эквивалент сенса в вики, от которого идёт связь
+     */
     WikiSense find_most_similar_sense_for_option(List<WikiSense> senses, Entry entry, SenseOptionType option_type) {
         if (senses == null || senses.size() == 0)
             return null;
@@ -52,6 +67,14 @@ public abstract class AbstractRule implements Rule {
         return result;
     }
 
+    /**
+     * Находит соответствие между понятием из ruthes и одним из сенсов вики из списка.
+     * Соответствие находится путём сравнения соседних узлов понятий и связей к ним. То есть чем больше у сенса
+     * эквивалентных узлов с понятием из рутеза, тем более вероятно, что это искомый сенс.
+     *
+     * @param source_senses одно из этих понятий соответствует понятию entry в ruthes
+     * @param entry         понятие, к которому находится соответствие
+     */
     WikiSense find_most_similar_sense(List<WikiSense> source_senses, Entry entry) {
         if (source_senses.size() <= 0)
             return null;
@@ -72,6 +95,10 @@ public abstract class AbstractRule implements Rule {
         return current_sense;
     }
 
+    /**
+     * Сравнивает связи к соседним узлам вики сенса и понятия рутеза.
+     * Для этого сравнивает тип связей и соответсвие имён соседних узлов.
+     */
     private int compare_links(WikiSense sense, Entry entry) {
         int similarity = 0;
 
@@ -79,6 +106,7 @@ public abstract class AbstractRule implements Rule {
             Entry target_entry = relation.getEntry();
             RelationType relation_type = relation.getType();
 
+            /* проходим по неразрешённым связям сенса (связи к леммам, а не сенсам) */
             for (SenseOption option : sense.getAllOptions()) {
                 String option_target_lemma = option.getOption().toString();
                 SenseOptionType option_type = option.getType();
@@ -88,6 +116,7 @@ public abstract class AbstractRule implements Rule {
                     similarity++;
             }
 
+            /* проходим по всем связям к сенсам */
             for (Map.Entry<String, SenseOptionType> map_entry : sense.getLinks().entrySet()) {
                 WikiSense link_target_sense = wiki_senses.get(map_entry.getKey());
                 SenseOptionType sense_option = map_entry.getValue();
