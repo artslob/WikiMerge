@@ -1,5 +1,8 @@
 package ifmo.jackalope.ruthes.entries;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Тип отношений между понятиями RuThes. В основном представлен отношениями из файла relations.xml, поэтому
  * изначально связывал между собой только понятия вида Concept.
@@ -103,13 +106,21 @@ public enum RelationType {
         return null;
     }
 
+    private final static Map<String, RelationType> name_to_relation = new HashMap<>();
+
     public static RelationType fromString(String name) {
-        for (RelationType rt : RelationType.values()) {
-            if (rt.typeName.equalsIgnoreCase(name)) {
-                return rt;
-            }
+        if (name_to_relation.isEmpty())
+            init_mapping();
+        RelationType result = name_to_relation.get(name.toLowerCase());
+        if (result == null)
+            throw new IllegalArgumentException("No constant with text " + name + " found");
+        return result;
+    }
+
+    private static void init_mapping() {
+        for (RelationType type : RelationType.values()) {
+            name_to_relation.put(type.getTypeName().toLowerCase(), type);
         }
-        throw new IllegalArgumentException("No constant with text " + name + " found");
     }
 
     @Override
