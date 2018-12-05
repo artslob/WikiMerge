@@ -50,17 +50,22 @@ public class FirstRule extends AbstractRule {
                 if (most_similar_target_sense == null)
                     continue;
 
-                String log = String.format("Can restore link from sense: %s\n\twith gloss: %s\n" +
-                        "\tto sense: %s\n\twith gloss: %s\n" +
-                        "\tby concept: %s\n",
-                        source_sense.getLemma(), source_sense.getGloss(),
-                        most_similar_target_sense.getLemma(), most_similar_target_sense.getGloss(),
-                        entry.getName());
                 links_restored++;
-                System.out.println(log);
+                log(source_sense, most_similar_target_sense, entry);
             }
         }
 
         return links_restored;
+    }
+
+    private void log(WikiSense source, WikiSense target, Entry entry) {
+        String log = String.format(
+                "Can restore link from sense: %s\n\twith gloss: %s\n" +
+                "\tto sense: %s\n\twith gloss: %s\n" +
+                "\tby concept: %s\n",
+                source.getLemma(), source.getGloss(),
+                target.getLemma(), target.getGloss(),
+                entry.getName());
+        System.out.println(log);
     }
 }

@@ -50,14 +50,8 @@ public class SecondRule extends AbstractRule {
                 if (link_exists_between_senses(source_sense, target_sense, adj_relation_type))
                     continue;
 
-                String log = String.format("Can create link from sense: %s\n\twith gloss: %s\n" +
-                        "\tto sense: %s\n\twith gloss: %s\n" +
-                        "\tby concept: %s\n",
-                        source_sense.getLemma(), source_sense.getGloss(),
-                        target_sense.getLemma(), target_sense.getGloss(),
-                        entry.getName());
                 links_restored++;
-                System.out.println(log);
+                log(source_sense, target_sense, entry);
             }
         }
 
@@ -86,5 +80,15 @@ public class SecondRule extends AbstractRule {
         }
 
         return false;
+    }
+
+    private void log(WikiSense source, WikiSense target, Entry entry) {
+        String log = String.format("Can create link from sense: %s\n\twith gloss: %s\n" +
+                        "\tto sense: %s\n\twith gloss: %s\n" +
+                        "\tby concept: %s\n",
+                source.getLemma(), source.getGloss(),
+                target.getLemma(), target.getGloss(),
+                entry.getName());
+        System.out.println(log);
     }
 }
