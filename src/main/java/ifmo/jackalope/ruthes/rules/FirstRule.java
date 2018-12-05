@@ -26,26 +26,58 @@ public class FirstRule extends AbstractRule {
         int links_restored = 0;
 
         for (Entry entry : ruthes.getEntries().values()) {
+            /*
+             * Получаем все сенсы леммы, имеющей такое же имя, как и узел entry из ruthes.
+             * Таким образом мы знаем, что один из сенсов соответствует данному узлу в ruthes.
+             * */
             List<WikiSense> source_senses = lemma_to_sense.get(entry.getName().toLowerCase());
             if (source_senses == null || source_senses.size() < 1)
                 continue;
 
+            /*
+             * Так как мы знаем, что один из сенсов соответствует данному узлу в ruthes, то данный метод
+             * находит точное соответствие между entry и одним из сенсов.
+             * В результате имеем, что source_sense и entry - эквивалентные понятия в wiki и ruthes.
+             * */
             WikiSense source_sense = find_most_similar_sense(source_senses, entry);
             if (source_sense == null)
                 continue;
 
-            // корректировка связей: для option связей source_sense - попытка определить к какому сенсу идёт ссылка
+            /*
+             * Далее проводим корректировку связей.
+             * Каждый сенс в wiki имеет неразрешённые связи (связи не к другим сенсам, а к леммам). Каждая лемма имеет
+             * список сенсов, логично, что данная связь направлена к одному из них, но мы не знаем к какому (так как в
+             * данный момент она направлена к лексеме). Поэтому мы проходим по всем таким связям и пытаемся определить,
+             * к какому именно сенсу леммы направлена данная связь.
+             * */
             for (SenseOption option : source_sense.getAllOptions()) {
                 String lemma = option.getOption().toString();
                 SenseOptionType option_type = option.getType();
 
+                /*
+                 * Получаем список сенсов леммы, к которой направлена неразрешённая связь.
+                 * */
                 List<WikiSense> possible_target_senses = lemma_to_sense.get(lemma);
                 if (possible_target_senses == null || possible_target_senses.size() < 1)
                     continue;
 
                 // TODO: тут можно восстанавливать больше, чем одну связь
-                // сравнение концептов/текстовых вхождений, имеющих связь с текущим concept и сенсов,
-                // имеющих связь с текущим source_sense (possible_target_senses)
+                /*
+                 * На данном этапе мы имеем:
+                 * 1. Сенс (source_sense), от которого идёт связь к лемме.
+                 * 2. Тип данной связи
+                 * 3. Список сенсов данной леммы (possible_target_senses).
+                 * 4. Соответствие между source_sense в вики и понятием entry в ruthes.
+                 *
+                 * Можно предположить, что данная связь также есть и в ruthes. Поэтому мы должны пройти по всем связям
+                 * понятия entry, имеющим такой же тип как и у связи в вики, и проверить на соответствие каждый узел на
+                 * конце этой связи в ruthes с каждым сенсом леммы, к которой идёт неразрешённая связь. То есть мы
+                 * сравниваем сенсы данной леммы (possible_target_senses) и все соседние узлы найденного понятия в
+                 * ruthes (соседи понятия entry) - так они соседние узлы к source_sense и entry, между которыми было
+                 * найдено соответствие.
+                 * Соответствие между понятием из рутеза и сенсом в вики определяется посредством нахождения
+                 * максимального количества совпадающих связей (одинаковый тип связи и похожий узел на конце связи.
+                 * */
                 WikiSense most_similar_target_sense = find_most_similar_sense_for_option(possible_target_senses, entry, option_type);
                 if (most_similar_target_sense == null)
                     continue;
