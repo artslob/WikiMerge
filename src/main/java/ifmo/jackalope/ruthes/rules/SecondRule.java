@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * для связей рутеза - попробовать найти аналогичные связи в вики (построение новых)
+ * Построение новых связей в вики - импорт связей из рутеза.
  */
 public class SecondRule extends AbstractRule {
 
@@ -27,26 +27,58 @@ public class SecondRule extends AbstractRule {
         int links_restored = 0;
 
         for (Entry entry : ruthes.getEntries().values()) {
+            /*
+             * Получаем все сенсы леммы, имеющей такое же имя, как и узел entry из ruthes.
+             * Таким образом мы знаем, что один из сенсов соответствует данному узлу в ruthes.
+             * */
             List<WikiSense> source_senses = lemma_to_sense.get(entry.getName().toLowerCase());
             if (source_senses == null || source_senses.size() < 1)
                 continue;
 
+            /*
+             * Так как мы знаем, что один из сенсов соответствует данному узлу в ruthes, то данный метод
+             * находит точное соответствие между entry и одним из сенсов.
+             * В результате имеем, что source_sense и entry - эквивалентные понятия в wiki и ruthes.
+             * */
             WikiSense source_sense = find_most_similar_sense(source_senses, entry);
             if (source_sense == null)
                 continue;
 
+            /*
+             * Проходим по всем связям entry, так ранее мы нашли соответствие между понятиями в wiki и ruthes, поэтому
+             * можно попробовать импортировать данные связи.
+             * */
             for (Relation relation : entry.getRelations()) {
+                /*
+                 * Соседний узел к entry.
+                 * */
                 Entry adj_entry = relation.getEntry();
                 RelationType adj_relation_type = relation.getType();
 
+                /*
+                 * Получаем список сенсов от леммы, имеющий такое же имя, что и соседний к entry узел в ruthes.
+                 * */
                 List<WikiSense> target_senses = lemma_to_sense.get(adj_entry.getName().toLowerCase());
                 if (target_senses == null || target_senses.size() < 1)
                     continue;
 
+                /*
+                 * На данном этапе мы имеем:
+                 * 1. Соответствие между сенсом в вики (source_sense) и понятием в рутезе (entry).
+                 * 2. Соответствие между соседним к entry понятием (adj_entry) и списком сенсов (target_senses).
+                 *
+                 * Поэтому можно предположить, что эквивалетное adj_entry понятие находится в этом списке, поэтому мы
+                 * можем воспроизвести связь от entry к adj_entry в виде связи от source_sense к одному из сенсов из
+                 * этого списка.
+                 * Для этого нам надо найти соответствие понятия adj_entry к одному из сенсов из target_senses.
+                 * */
                 WikiSense target_sense = find_most_similar_sense(target_senses, adj_entry);
                 if (target_sense == null)
                     continue;
 
+                /*
+                 * Проверяем, что связь не существует.
+                 * */
                 if (link_exists_between_senses(source_sense, target_sense, adj_relation_type))
                     continue;
 
