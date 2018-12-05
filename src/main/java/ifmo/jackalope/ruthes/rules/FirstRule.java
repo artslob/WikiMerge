@@ -30,7 +30,7 @@ public class FirstRule extends AbstractRule {
              * Получаем все сенсы леммы, имеющей такое же имя, как и узел entry из ruthes.
              * Таким образом мы знаем, что один из сенсов соответствует данному узлу в ruthes.
              * */
-            List<WikiSense> source_senses = lemma_to_sense.get(entry.getName().toLowerCase());
+            List<WikiSense> source_senses = lemma_to_senses.get(entry.getName().toLowerCase());
             if (source_senses == null || source_senses.size() < 1)
                 continue;
 
@@ -57,7 +57,7 @@ public class FirstRule extends AbstractRule {
                 /*
                  * Получаем список сенсов леммы, к которой направлена неразрешённая связь.
                  * */
-                List<WikiSense> possible_target_senses = lemma_to_sense.get(lemma);
+                List<WikiSense> possible_target_senses = lemma_to_senses.get(lemma);
                 if (possible_target_senses == null || possible_target_senses.size() < 1)
                     continue;
 

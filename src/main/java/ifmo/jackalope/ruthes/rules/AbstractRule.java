@@ -13,15 +13,15 @@ import java.util.Map;
 
 public abstract class AbstractRule implements Rule {
     final Map<String, WikiSense> wiki_senses;
-    final Map<String, List<WikiSense>> lemma_to_sense;
+    final Map<String, List<WikiSense>> lemma_to_senses;
     final RuthesSnapshot ruthes;
 
     AbstractRule(final Map<String, WikiSense> wiki_senses,
                  final RuthesSnapshot ruthes,
-                 final Map<String, List<WikiSense>> lemma_to_sense) {
+                 final Map<String, List<WikiSense>> lemma_to_senses) {
         this.wiki_senses = wiki_senses;
         this.ruthes = ruthes;
-        this.lemma_to_sense = lemma_to_sense;
+        this.lemma_to_senses = lemma_to_senses;
     }
 
     WikiSense find_most_similar_sense_for_option(List<WikiSense> senses, Entry entry, SenseOptionType option_type) {
